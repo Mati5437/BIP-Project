@@ -1,112 +1,189 @@
 import { useState } from 'react';
 import { LoginScreen } from './components/LoginScreen';
 import { AgeSelection } from './components/AgeSelection';
+import { EnergySelection } from './components/EnergySelection';
 import { Sidebar } from './components/Sidebar';
-import { DashboardView } from './components/DashboardView';
+import { ChildDashboard } from './components/ChildDashboard';
+import { ActivityCatalogue } from './components/ActivityCatalogue';
 import { LiveLessonRoom } from './components/LiveLessonRoom';
 import { AchievementsView } from './components/AchievementsView';
 import { MessagesView } from './components/MessagesView';
-import { LearningMockup } from './components/LearningMockup';
+import {
+  getMockUser,
+  saveMockUser,
+  type EnergyLevel
+} from './mock/mockDatabase';
 
-type AgeGroup = 'young' | 'teen' | 'advanced' | null;
+type AgeGroup = 'young' | 'teen' | 'advanced';
 
 export default function App() {
   const [username, setUsername] = useState<string | null>(null);
-  const [ageGroup, setAgeGroup] = useState<AgeGroup>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null);
+  const [energyLevel, setEnergyLevel] = useState<EnergyLevel | null>(null);
   const [activeTab, setActiveTab] = useState('home');
 
-  // Handler logowania
-  const handleLogin = (name: string) => {
+  const handleLogin = (name: string, role: string) => {
+    const savedUser = saveMockUser(name, role, {});
+
     setUsername(name);
+    setUserRole(role);
+    setActiveTab('home');
+
+    if (role === 'child') {
+      setAgeGroup(savedUser.ageGroup ?? null);
+
+      if (savedUser.energyPopupCompleted && savedUser.energyLevel) {
+        setEnergyLevel(savedUser.energyLevel);
+      } else {
+        setEnergyLevel(null);
+      }
+    } else {
+      setAgeGroup('teen');
+      setEnergyLevel('medium');
+    }
   };
 
-  // Handler wyboru wieku
-  const handleAgeSelect = (age: string) => {
-    setAgeGroup(age as AgeGroup);
+  const handleAgeSelect = (selectedAgeGroup: string) => {
+    setAgeGroup(selectedAgeGroup as AgeGroup);
+
+    if (!username) return;
+
+    const savedUser = getMockUser(username, 'child');
+
+    if (savedUser?.energyPopupCompleted && savedUser.energyLevel) {
+      setEnergyLevel(savedUser.energyLevel);
+    } else {
+      setEnergyLevel(null);
+    }
   };
 
-  // Handler wylogowania
+  const handleEnergySelect = (selectedEnergyLevel: EnergyLevel) => {
+    setEnergyLevel(selectedEnergyLevel);
+  };
+
   const handleLogout = () => {
     setUsername(null);
+    setUserRole(null);
     setAgeGroup(null);
+    setEnergyLevel(null);
     setActiveTab('home');
   };
 
-  // Renderowanie widoku na podstawie aktywnej zakładki
   const renderView = () => {
-    if (activeTab.startsWith('learning_')) {
-      const topic = activeTab.split('_')[1];
+    if (userRole !== 'child') {
       return (
-        <LearningMockup 
-          topic={topic} 
-          ageGroup={ageGroup!}
-          onBack={() => setActiveTab('home')} 
-        />
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          flexDirection: 'column',
+          gap: '16px'
+        }}>
+          <h2 style={{ fontSize: '24px', fontWeight: '700', color: '#1E293B' }}>
+            {userRole === 'parent'
+              ? 'Parent Dashboard'
+              : userRole === 'host'
+                ? 'Host Dashboard'
+                : 'Hospital Dashboard'}
+          </h2>
+          <p style={{ color: '#64748B' }}>
+            Coming soon in the next iteration!
+          </p>
+        </div>
       );
     }
 
     switch (activeTab) {
       case 'home':
         return (
-          <DashboardView 
+          <ChildDashboard
             username={username!}
             ageGroup={ageGroup!}
-            onJoin={() => setActiveTab('live_session')} 
-            onTopic={(topic) => setActiveTab(`learning_${topic}`)} 
+            onJoinSession={() => setActiveTab('live_session')}
+            onBrowseActivities={() => setActiveTab('activities')}
           />
         );
+
+      case 'activities':
+        return (
+          <ActivityCatalogue
+            ageGroup={ageGroup!}
+            onBack={() => setActiveTab('home')}
+            onSelectActivity={() => {
+              setActiveTab('live_session');
+            }}
+          />
+        );
+
       case 'live_session':
         return (
-          <LiveLessonRoom 
+          <LiveLessonRoom
             onBack={() => setActiveTab('home')}
             ageGroup={ageGroup!}
           />
         );
+
       case 'achievements':
         return <AchievementsView ageGroup={ageGroup!} />;
+
       case 'messages':
         return <MessagesView ageGroup={ageGroup!} />;
+
       default:
         return (
-          <DashboardView 
+          <ChildDashboard
             username={username!}
             ageGroup={ageGroup!}
-            onJoin={() => setActiveTab('live_session')} 
-            onTopic={(topic) => setActiveTab(`learning_${topic}`)} 
+            onJoinSession={() => setActiveTab('live_session')}
+            onBrowseActivities={() => setActiveTab('activities')}
           />
         );
     }
   };
 
-  // Wyświetl ekran logowania, jeśli użytkownik nie jest zalogowany
   if (!username) {
     return <LoginScreen onLogin={handleLogin} />;
   }
 
-  // Wyświetl wybór wieku, jeśli nie został wybrany
-  if (!ageGroup) {
-    return <AgeSelection username={username} onAgeSelect={handleAgeSelect} />;
+  if (userRole === 'child' && !ageGroup) {
+    return (
+      <AgeSelection
+        username={username}
+        onAgeSelect={handleAgeSelect}
+      />
+    );
   }
 
-  // Główna aplikacja
-  return (
-    <div style={{ 
-      display: 'flex', 
-      height: '100vh', 
-      fontFamily: '"Plus Jakarta Sans", sans-serif', 
-      backgroundColor: '#F8FAFC' 
-    }}>
-      <Sidebar 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab}
+  if (userRole === 'child' && !energyLevel) {
+    return (
+      <EnergySelection
         username={username}
-        onLogout={handleLogout}
+        onEnergySelect={handleEnergySelect}
       />
-      
-      <div style={{ 
-        flex: 1, 
-        padding: '40px', 
-        overflowY: 'auto' 
+    );
+  }
+
+  return (
+    <div style={{
+      display: 'flex',
+      height: '100vh',
+      fontFamily: '"Plus Jakarta Sans", sans-serif',
+      background: 'linear-gradient(135deg, #EBF8FF 0%, #F0F9FF 100%)'
+    }}>
+      {userRole === 'child' && (
+        <Sidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          username={username}
+          onLogout={handleLogout}
+        />
+      )}
+
+      <div style={{
+        flex: 1,
+        overflowY: 'auto'
       }}>
         {renderView()}
       </div>
@@ -128,7 +205,6 @@ export default function App() {
             animation: fadeIn 0.5s ease;
           }
 
-          /* Scrollbar styling */
           ::-webkit-scrollbar {
             width: 8px;
           }

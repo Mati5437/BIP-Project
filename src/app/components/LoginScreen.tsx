@@ -1,148 +1,298 @@
 import { useState } from 'react';
-import { User, LogIn } from 'lucide-react';
+import { Heart, User, Shield, Video, Building2 } from 'lucide-react';
 
 interface LoginScreenProps {
-  onLogin: (username: string) => void;
+  onLogin: (username: string, role: string) => void;
 }
 
 export function LoginScreen({ onLogin }: LoginScreenProps) {
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [username, setUsername] = useState('');
+
+  const roles = [
+    {
+      id: 'child',
+      name: 'Child',
+      icon: <Heart size={32} />,
+      color: '#FF6B9D',
+      gradient: 'linear-gradient(135deg, #FFE5EC 0%, #FFC2D1 100%)',
+      description: 'Join fun learning sessions'
+    },
+    {
+      id: 'parent',
+      name: 'Parent/Guardian',
+      icon: <Shield size={32} />,
+      color: '#10B981',
+      gradient: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%)',
+      description: 'Monitor and approve activities'
+    },
+    {
+      id: 'host',
+      name: 'Host',
+      icon: <Video size={32} />,
+      color: '#8B5CF6',
+      gradient: 'linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%)',
+      description: 'Lead learning sessions'
+    },
+    {
+      id: 'hospital',
+      name: 'Hospital/Clinic',
+      icon: <Building2 size={32} />,
+      color: '#3B82F6',
+      gradient: 'linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%)',
+      description: 'Manage patient access'
+    }
+  ];
+
+  const handleRoleSelect = (roleId: string) => {
+    setSelectedRole(roleId);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim()) {
-      onLogin(username.trim());
+    if (username.trim() && selectedRole) {
+      onLogin(username.trim(), selectedRole);
     }
   };
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      height: '100vh', 
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      fontFamily: '"Plus Jakarta Sans", sans-serif'
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      background: 'linear-gradient(135deg, #EBF8FF 0%, #E0F2FE 50%, #FFF7ED 100%)',
+      fontFamily: '"Plus Jakarta Sans", sans-serif',
+      padding: '40px 20px'
     }}>
-      <div style={{ 
-        backgroundColor: 'white', 
-        padding: '60px 50px', 
-        borderRadius: '30px', 
-        boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
-        maxWidth: '450px',
+      <div style={{
+        backgroundColor: 'white',
+        padding: '50px 40px',
+        borderRadius: '32px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
+        maxWidth: '900px',
         width: '100%',
         textAlign: 'center'
       }}>
-        <div style={{ 
-          width: '80px', 
-          height: '80px', 
-          backgroundColor: '#0A2E6E', 
-          borderRadius: '20px', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          margin: '0 auto 25px',
-          color: 'white',
-          fontSize: '32px',
-          fontWeight: 'bold'
+        {/* Logo and Branding */}
+        <div style={{
+          width: '90px',
+          height: '90px',
+          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
+          borderRadius: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 20px',
+          boxShadow: '0 8px 16px rgba(20, 184, 166, 0.25)'
         }}>
-          C
+          <Heart size={48} color="white" fill="white" />
         </div>
-        
-        <h1 style={{ 
-          fontSize: '32px', 
-          fontWeight: 'bold', 
-          color: '#0A2E6E', 
-          marginBottom: '10px' 
+
+        <h1 style={{
+          fontSize: '36px',
+          fontWeight: '800',
+          background: 'linear-gradient(135deg, #14B8A6 0%, #3B82F6 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          marginBottom: '8px'
         }}>
-          Witaj w CareQuest
+          Welcome to CareQuest
         </h1>
-        
-        <p style={{ 
-          color: '#64748B', 
+
+        <p style={{
+          color: '#64748B',
           marginBottom: '40px',
-          fontSize: '16px'
+          fontSize: '17px',
+          lineHeight: '1.6'
         }}>
-          Zaloguj się, aby rozpocząć swoją przygodę edukacyjną
+          Safe learning, creativity & connection during recovery
         </p>
 
-        <form onSubmit={handleSubmit}>
-          <div style={{ 
-            position: 'relative', 
-            marginBottom: '25px' 
-          }}>
-            <User 
-              style={{ 
-                position: 'absolute', 
-                left: '20px', 
-                top: '50%', 
-                transform: 'translateY(-50%)', 
-                color: '#94A3B8' 
-              }} 
-              size={20} 
-            />
-            <input
-              type="text"
-              placeholder="Wpisz swoje imię"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '18px 18px 18px 55px',
-                borderRadius: '15px',
-                border: '2px solid #E2E8F0',
-                fontSize: '16px',
-                outline: 'none',
-                transition: 'border-color 0.3s'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#3B82F6'}
-              onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
-            />
-          </div>
+        {!selectedRole ? (
+          <>
+            <h3 style={{
+              fontSize: '18px',
+              fontWeight: '600',
+              color: '#1E293B',
+              marginBottom: '24px'
+            }}>
+              How would you like to join?
+            </h3>
 
-          <button
-            type="submit"
-            disabled={!username.trim()}
-            style={{
-              width: '100%',
-              padding: '18px',
-              backgroundColor: username.trim() ? '#3B82F6' : '#CBD5E1',
-              color: 'white',
-              border: 'none',
-              borderRadius: '15px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: username.trim() ? 'pointer' : 'not-allowed',
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '16px',
+              marginBottom: '20px'
+            }}>
+              {roles.map((role) => (
+                <div
+                  key={role.id}
+                  onClick={() => handleRoleSelect(role.id)}
+                  style={{
+                    background: role.gradient,
+                    borderRadius: '20px',
+                    padding: '28px 20px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    border: '2px solid transparent',
+                    textAlign: 'center'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-6px)';
+                    e.currentTarget.style.boxShadow = `0 12px 24px ${role.color}30`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    color: role.color,
+                    marginBottom: '12px',
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}>
+                    {role.icon}
+                  </div>
+                  <h4 style={{
+                    fontSize: '16px',
+                    fontWeight: '700',
+                    color: '#1E293B',
+                    marginBottom: '6px'
+                  }}>
+                    {role.name}
+                  </h4>
+                  <p style={{
+                    fontSize: '13px',
+                    color: '#64748B',
+                    margin: 0,
+                    lineHeight: '1.4'
+                  }}>
+                    {role.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
+            <div style={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              gap: '10px',
-              transition: 'all 0.3s'
-            }}
-            onMouseEnter={(e) => {
-              if (username.trim()) {
-                e.currentTarget.style.backgroundColor = '#2563EB';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 10px 20px rgba(59, 130, 246, 0.3)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = username.trim() ? '#3B82F6' : '#CBD5E1';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
-          >
-            <LogIn size={20} />
-            Zaloguj się
-          </button>
-        </form>
+              gap: '12px',
+              marginBottom: '24px',
+              padding: '16px',
+              background: roles.find(r => r.id === selectedRole)?.gradient,
+              borderRadius: '16px'
+            }}>
+              <div style={{ color: roles.find(r => r.id === selectedRole)?.color }}>
+                {roles.find(r => r.id === selectedRole)?.icon}
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <p style={{ margin: 0, fontSize: '14px', color: '#64748B' }}>Joining as</p>
+                <p style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1E293B' }}>
+                  {roles.find(r => r.id === selectedRole)?.name}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => { setSelectedRole(null); setUsername(''); }}
+                style={{
+                  marginLeft: 'auto',
+                  background: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '6px 12px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  color: '#64748B',
+                  cursor: 'pointer'
+                }}
+              >
+                Change
+              </button>
+            </div>
 
-        <p style={{ 
-          marginTop: '30px', 
-          color: '#94A3B8', 
-          fontSize: '14px' 
+            <div style={{
+              position: 'relative',
+              marginBottom: '20px'
+            }}>
+              <User
+                style={{
+                  position: 'absolute',
+                  left: '18px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  color: '#94A3B8'
+                }}
+                size={20}
+              />
+              <input
+                type="text"
+                placeholder="Enter your name"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '16px 16px 16px 50px',
+                  borderRadius: '14px',
+                  border: '2px solid #E2E8F0',
+                  fontSize: '16px',
+                  outline: 'none',
+                  transition: 'border-color 0.3s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#14B8A6'}
+                onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!username.trim()}
+              style={{
+                width: '100%',
+                padding: '16px',
+                background: username.trim()
+                  ? 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)'
+                  : '#CBD5E1',
+                color: 'white',
+                border: 'none',
+                borderRadius: '14px',
+                fontSize: '16px',
+                fontWeight: '700',
+                cursor: username.trim() ? 'pointer' : 'not-allowed',
+                transition: 'all 0.3s',
+                boxShadow: username.trim() ? '0 4px 12px rgba(20, 184, 166, 0.3)' : 'none'
+              }}
+              onMouseEnter={(e) => {
+                if (username.trim()) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 8px 20px rgba(20, 184, 166, 0.4)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = username.trim() ? '0 4px 12px rgba(20, 184, 166, 0.3)' : 'none';
+              }}
+            >
+              Continue to CareQuest
+            </button>
+          </form>
+        )}
+
+        <p style={{
+          marginTop: '32px',
+          color: '#94A3B8',
+          fontSize: '14px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '6px'
         }}>
-          Twoje dane są bezpieczne 🔒
+          <Shield size={16} />
+          Safe, secure & parent-approved
         </p>
       </div>
     </div>

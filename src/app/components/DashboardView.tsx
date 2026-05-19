@@ -9,58 +9,58 @@ interface DashboardViewProps {
 }
 
 export function DashboardView({ username, ageGroup, onJoin, onTopic }: DashboardViewProps) {
-  // Dostosowanie tytułu sesji do grupy wiekowej
+  // Adapt session title to age group
   const getLiveSessionTitle = () => {
     switch (ageGroup) {
       case 'young':
-        return 'Narysuj kolorowe logo!';
+        return 'Draw a Colorful Logo!';
       case 'teen':
-        return 'Zaprojektuj logo dla organizacji charytatywnej';
+        return 'Design a Logo for a Charity';
       case 'advanced':
         return 'Design a Professional Brand Identity';
       default:
-        return 'Zaprojektuj logo dla organizacji';
+        return 'Design a Logo';
     }
   };
 
   const getLiveSessionDescription = () => {
     switch (ageGroup) {
       case 'young':
-        return 'Dołącz do kolorowej zabawy z rysowaniem!';
+        return 'Join the colorful drawing fun!';
       case 'teen':
-        return 'Dołącz do kreatywnej sesji ze swoimi kolegami!';
+        return 'Join a creative session with your peers!';
       case 'advanced':
         return 'Join an advanced design workshop with industry professionals';
       default:
-        return 'Dołącz do sesji live';
+        return 'Join a live session';
     }
   };
 
   return (
     <div className="animate-fade">
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '40px' }}>
-        <h2 style={{ fontSize: '28px', fontWeight: '800' }}>Cześć, {username}! 👋</h2>
+        <h2 style={{ fontSize: '28px', fontWeight: '800' }}>Hi, {username}! 👋</h2>
         <div style={{ display: 'flex', gap: '15px' }}>
           <div style={{ position: 'relative' }}>
-            <Search 
-              style={{ 
-                position: 'absolute', 
-                left: '15px', 
-                top: '12px', 
-                color: '#94A3B8' 
-              }} 
-              size={18} 
+            <Search
+              style={{
+                position: 'absolute',
+                left: '15px',
+                top: '12px',
+                color: '#94A3B8'
+              }}
+              size={18}
             />
-            <input 
-              type="text" 
-              placeholder="Szukaj zajęć..." 
-              style={{ 
-                padding: '12px 45px', 
-                borderRadius: '15px', 
-                border: '1px solid #E2E8F0', 
+            <input
+              type="text"
+              placeholder="Search activities..."
+              style={{
+                padding: '12px 45px',
+                borderRadius: '15px',
+                border: '1px solid #E2E8F0',
                 width: '250px',
                 outline: 'none'
-              }} 
+              }}
             />
           </div>
           <div style={{ 
@@ -75,24 +75,24 @@ export function DashboardView({ username, ageGroup, onJoin, onTopic }: Dashboard
         </div>
       </div>
 
-      {/* KARTA Z SESJĄ NA ŻYWO */}
-      <div style={{ 
-        background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)', 
-        borderRadius: '35px', 
-        padding: '50px', 
-        color: 'white', 
-        position: 'relative', 
-        overflow: 'hidden', 
-        marginBottom: '40px' 
+      {/* LIVE SESSION CARD */}
+      <div style={{
+        background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
+        borderRadius: '35px',
+        padding: '50px',
+        color: 'white',
+        position: 'relative',
+        overflow: 'hidden',
+        marginBottom: '40px'
       }}>
-        <span style={{ 
-          backgroundColor: '#EF4444', 
-          padding: '6px 15px', 
-          borderRadius: '20px', 
-          fontSize: '11px', 
-          fontWeight: 'bold' 
+        <span style={{
+          backgroundColor: '#EF4444',
+          padding: '6px 15px',
+          borderRadius: '20px',
+          fontSize: '11px',
+          fontWeight: 'bold'
         }}>
-          NA ŻYWO
+          LIVE
         </span>
         <h3 style={{ fontSize: '36px', fontWeight: 'bold', margin: '20px 0 10px' }}>
           {getLiveSessionTitle()}
@@ -123,7 +123,7 @@ export function DashboardView({ username, ageGroup, onJoin, onTopic }: Dashboard
             e.currentTarget.style.boxShadow = 'none';
           }}
         >
-          Dołącz teraz do lekcji online
+          Join Online Lesson Now
         </button>
         
         <div style={{ 
@@ -139,38 +139,38 @@ export function DashboardView({ username, ageGroup, onJoin, onTopic }: Dashboard
       </div>
 
       <h3 style={{ marginBottom: '20px', fontSize: '20px', fontWeight: 'bold' }}>
-        Przeglądaj tematy
+        Browse Topics
       </h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '20px' }}>
-        <TopicCard 
-          icon={<Briefcase size={32}/>} 
-          label="Biznes" 
-          color="#EFF6FF" 
-          onClick={() => onTopic('business')} 
+        <TopicCard
+          icon={<Briefcase size={32}/>}
+          label="Business"
+          color="#EFF6FF"
+          onClick={() => onTopic('business')}
         />
-        <TopicCard 
-          icon={<Palette size={32}/>} 
-          label="Projektowanie" 
-          color="#F0FDF4" 
-          onClick={() => onTopic('design')} 
+        <TopicCard
+          icon={<Palette size={32}/>}
+          label="Design"
+          color="#F0FDF4"
+          onClick={() => onTopic('design')}
         />
-        <TopicCard 
-          icon={<Code size={32}/>} 
-          label="Programowanie" 
-          color="#FFF7ED" 
-          onClick={() => onTopic('coding')} 
+        <TopicCard
+          icon={<Code size={32}/>}
+          label="Coding"
+          color="#FFF7ED"
+          onClick={() => onTopic('coding')}
         />
-        <TopicCard 
-          icon={<Megaphone size={32}/>} 
-          label="Marketing" 
-          color="#FAF5FF" 
-          onClick={() => onTopic('marketing')} 
+        <TopicCard
+          icon={<Megaphone size={32}/>}
+          label="Marketing"
+          color="#FAF5FF"
+          onClick={() => onTopic('marketing')}
         />
-        <TopicCard 
-          icon={<TrendingUp size={32}/>} 
-          label="Finanse" 
-          color="#FEFCE8" 
-          onClick={() => onTopic('finance')} 
+        <TopicCard
+          icon={<TrendingUp size={32}/>}
+          label="Finance"
+          color="#FEFCE8"
+          onClick={() => onTopic('finance')}
         />
       </div>
     </div>

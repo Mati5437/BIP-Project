@@ -6,47 +6,47 @@ interface AchievementsViewProps {
 
 export function AchievementsView({ ageGroup }: AchievementsViewProps) {
   const categories = [
-    { 
-      name: ageGroup === 'advanced' ? 'Creative Mastery' : 'Kreatywny Odkrywca', 
-      icon: '🎨', 
-      progress: 85, 
-      color: '#F0FDF4', 
-      textColor: '#166534' 
+    {
+      name: ageGroup === 'advanced' ? 'Creative Mastery' : 'Creative Explorer',
+      icon: '🎨',
+      progress: 85,
+      color: '#F0FDF4',
+      textColor: '#166534'
     },
-    { 
-      name: ageGroup === 'advanced' ? 'Coding Expert' : 'Ninja Programowania', 
-      icon: '💻', 
-      progress: 40, 
-      color: '#EFF6FF', 
-      textColor: '#1E40AF' 
+    {
+      name: ageGroup === 'advanced' ? 'Coding Expert' : 'Coding Ninja',
+      icon: '💻',
+      progress: 40,
+      color: '#EFF6FF',
+      textColor: '#1E40AF'
     },
-    { 
-      name: ageGroup === 'advanced' ? 'Leadership' : 'Społeczny Bohater', 
-      icon: '🤝', 
-      progress: 100, 
-      color: '#FEFCE8', 
-      textColor: '#854D0E' 
+    {
+      name: ageGroup === 'advanced' ? 'Leadership' : 'Social Hero',
+      icon: '🤝',
+      progress: 100,
+      color: '#FEFCE8',
+      textColor: '#854D0E'
     }
   ];
 
   const getBadges = () => {
     if (ageGroup === 'young') {
       return [
-        { id: 1, title: 'Pierwsza lekcja!', desc: 'Ukończyłeś swoją pierwszą lekcję', status: 'Unlocked', icon: '🌟', rarity: 'Zwykła' },
-        { id: 2, title: 'Młody Artysta', desc: 'Stworzyłeś swoje pierwsze logo', status: 'Unlocked', icon: '🖋️', rarity: 'Rzadka' },
-        { id: 3, title: 'Tygodniowy mistrz', desc: 'Logowałeś się przez 7 dni z rzędu', status: 'Unlocked', icon: '🔥', rarity: 'Epicka' },
-        { id: 4, title: 'Super pomocnik', desc: 'Pomogłeś 3 innym uczniom', status: 'Locked', icon: '👑', rarity: 'Legendarna' },
-        { id: 5, title: 'Szybki uczeń', desc: 'Ukończyłeś 3 tematy w jeden dzień', status: 'Locked', icon: '⚡', rarity: 'Rzadka' },
-        { id: 6, title: 'Detektyw błędów', desc: 'Znalazłeś i zgłosiłeś problem', status: 'Locked', icon: '🐞', rarity: 'Zwykła' }
+        { id: 1, title: 'First Lesson!', desc: 'Completed your first lesson', status: 'Unlocked', icon: '🌟', rarity: 'Common' },
+        { id: 2, title: 'Young Artist', desc: 'Created your first logo', status: 'Unlocked', icon: '🖋️', rarity: 'Rare' },
+        { id: 3, title: 'Weekly Champion', desc: 'Logged in for 7 days in a row', status: 'Unlocked', icon: '🔥', rarity: 'Epic' },
+        { id: 4, title: 'Super Helper', desc: 'Helped 3 other students', status: 'Locked', icon: '👑', rarity: 'Legendary' },
+        { id: 5, title: 'Quick Learner', desc: 'Completed 3 topics in one day', status: 'Locked', icon: '⚡', rarity: 'Rare' },
+        { id: 6, title: 'Bug Detective', desc: 'Found and reported a problem', status: 'Locked', icon: '🐞', rarity: 'Common' }
       ];
     } else if (ageGroup === 'teen') {
       return [
-        { id: 1, title: 'Pierwsza lekcja', desc: 'Ukończyłeś swoją pierwszą sesję na żywo', status: 'Unlocked', icon: '🌟', rarity: 'Zwykła' },
-        { id: 2, title: 'Mistrz Logo', desc: 'Zaprojektowałeś logo dla organizacji', status: 'Unlocked', icon: '🖋️', rarity: 'Rzadka' },
-        { id: 3, title: '7-dniowa passa', desc: 'Logowałeś się przez 7 dni z rzędu', status: 'Unlocked', icon: '🔥', rarity: 'Epicka' },
-        { id: 4, title: 'Lider społeczności', desc: 'Pomogłeś 5 innym uczniom', status: 'Locked', icon: '👑', rarity: 'Legendarna' },
-        { id: 5, title: 'Szybki uczeń', desc: 'Ukończyłeś 3 tematy w jeden dzień', status: 'Locked', icon: '⚡', rarity: 'Rzadka' },
-        { id: 6, title: 'Łowca błędów', desc: 'Zgłosiłeś problem lub naprawiłeś kod', status: 'Locked', icon: '🐞', rarity: 'Zwykła' }
+        { id: 1, title: 'First Lesson', desc: 'Completed your first live session', status: 'Unlocked', icon: '🌟', rarity: 'Common' },
+        { id: 2, title: 'Logo Master', desc: 'Designed a logo for a charity', status: 'Unlocked', icon: '🖋️', rarity: 'Rare' },
+        { id: 3, title: '7-Day Streak', desc: 'Logged in for 7 days in a row', status: 'Unlocked', icon: '🔥', rarity: 'Epic' },
+        { id: 4, title: 'Community Leader', desc: 'Helped 5 other students', status: 'Locked', icon: '👑', rarity: 'Legendary' },
+        { id: 5, title: 'Quick Learner', desc: 'Completed 3 topics in one day', status: 'Locked', icon: '⚡', rarity: 'Rare' },
+        { id: 6, title: 'Bug Hunter', desc: 'Reported a problem or fixed code', status: 'Locked', icon: '🐞', rarity: 'Common' }
       ];
     } else {
       return [
@@ -63,60 +63,78 @@ export function AchievementsView({ ageGroup }: AchievementsViewProps) {
   const badges = getBadges();
 
   return (
-    <div style={{ animation: 'fadeIn 0.6s ease', paddingBottom: '40px' }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'flex-end', 
-        marginBottom: '40px' 
+    <div style={{ padding: '40px', maxWidth: '1400px', margin: '0 auto' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end',
+        marginBottom: '40px'
       }}>
         <div>
-          <h2 style={{ 
-            fontSize: '32px', 
-            fontWeight: '900', 
-            color: '#0A2E6E', 
-            margin: 0 
+          <h2 style={{
+            fontSize: '32px',
+            fontWeight: '800',
+            color: '#1E293B',
+            margin: 0,
+            marginBottom: '8px'
           }}>
-            {ageGroup === 'advanced' ? 'My Achievements 🏆' : 'Moje Osiągnięcia 🏆'}
+            My Achievements 🏆
           </h2>
-          <p style={{ color: '#64748B', marginTop: '5px' }}>
-            {ageGroup === 'advanced' 
-              ? 'Track your progress and collect unique badges!' 
-              : 'Śledź swoje postępy i zbieraj unikalne odznaki!'}
+          <p style={{ color: '#64748B', margin: 0, fontSize: '16px' }}>
+            Track your progress and collect unique badges!
           </p>
         </div>
-        <div style={{ textAlign: 'right' }}>
-          <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#64748B' }}>
-            {ageGroup === 'advanced' ? 'Total Care Coins:' : 'Wszystkie Monety Troski:'}
+        <div style={{
+          background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
+          padding: '20px 28px',
+          borderRadius: '16px',
+          textAlign: 'center',
+          border: '2px solid #FED7AA'
+        }}>
+          <span style={{ fontSize: '14px', fontWeight: '700', color: '#92400E', display: 'block', marginBottom: '4px' }}>
+            Total Care Coins
           </span>
-          <h3 style={{ margin: 0, color: '#F59E0B', fontSize: '24px' }}>✨ 240</h3>
+          <div style={{
+            fontSize: '32px',
+            fontWeight: '800',
+            color: '#F59E0B',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            justifyContent: 'center'
+          }}>
+            <span>⭐</span> 120
+          </div>
         </div>
       </div>
 
       {/* PROGRESS TRACKERS */}
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-        gap: '20px', 
-        marginBottom: '40px' 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: '20px',
+        marginBottom: '40px'
       }}>
         {categories.map((cat, i) => (
-          <div 
-            key={i} 
-            style={{ 
-              backgroundColor: 'white', 
-              padding: '25px', 
-              borderRadius: '25px', 
-              boxShadow: '0 10px 15px -3px rgba(0,0,0,0.05)',
-              transition: 'all 0.3s'
+          <div
+            key={i}
+            style={{
+              backgroundColor: 'white',
+              padding: '28px',
+              borderRadius: '20px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+              transition: 'all 0.3s',
+              border: '2px solid #F1F5F9'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-5px)';
-              e.currentTarget.style.boxShadow = '0 15px 25px -5px rgba(0,0,0,0.1)';
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(0,0,0,0.1)';
+              e.currentTarget.style.borderColor = cat.textColor;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.05)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)';
+              e.currentTarget.style.borderColor = '#F1F5F9';
             }}
           >
             <div style={{ 
@@ -157,40 +175,47 @@ export function AchievementsView({ ageGroup }: AchievementsViewProps) {
       </div>
 
       {/* BADGE GRID */}
-      <h3 style={{ 
-        fontSize: '20px', 
-        fontWeight: 'bold', 
-        marginBottom: '20px', 
-        color: '#1E293B' 
+      <h3 style={{
+        fontSize: '22px',
+        fontWeight: '700',
+        marginBottom: '20px',
+        color: '#1E293B'
       }}>
-        {ageGroup === 'advanced' ? 'Badge Collection' : 'Kolekcja odznak'}
+        Badge Collection
       </h3>
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-        gap: '20px' 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+        gap: '20px'
       }}>
         {badges.map((badge) => (
-          <div 
-            key={badge.id} 
-            style={{ 
-              backgroundColor: 'white', 
-              padding: '25px', 
-              borderRadius: '30px', 
-              textAlign: 'center', 
+          <div
+            key={badge.id}
+            style={{
+              backgroundColor: 'white',
+              padding: '28px',
+              borderRadius: '20px',
+              textAlign: 'center',
               position: 'relative',
-              opacity: badge.status === 'Locked' ? 0.6 : 1,
-              filter: badge.status === 'Locked' ? 'grayscale(1)' : 'none',
-              border: badge.status === 'Unlocked' ? '2px solid #E2E8F0' : '2px dashed #CBD5E1',
-              transition: 'transform 0.3s ease',
-              cursor: 'pointer'
-            }} 
+              opacity: badge.status === 'Locked' ? 0.5 : 1,
+              filter: badge.status === 'Locked' ? 'grayscale(0.8)' : 'none',
+              border: badge.status === 'Unlocked' ? '3px solid #14B8A6' : '2px dashed #CBD5E1',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer',
+              boxShadow: badge.status === 'Unlocked' ? '0 4px 12px rgba(20, 184, 166, 0.15)' : 'none'
+            }}
             onMouseEnter={(e) => {
               if (badge.status === 'Unlocked') {
-                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+                e.currentTarget.style.boxShadow = '0 8px 20px rgba(20, 184, 166, 0.25)';
               }
             }}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0) scale(1)';
+              if (badge.status === 'Unlocked') {
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(20, 184, 166, 0.15)';
+              }
+            }}
           >
             {badge.status === 'Locked' && (
               <div style={{ 
@@ -235,13 +260,13 @@ export function AchievementsView({ ageGroup }: AchievementsViewProps) {
             </p>
             
             <div style={{ marginTop: '15px' }}>
-              <span style={{ 
-                fontSize: '10px', 
-                fontWeight: 'bold', 
-                textTransform: 'uppercase', 
+              <span style={{
+                fontSize: '10px',
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
                 letterSpacing: '0.5px',
-                color: badge.rarity === 'Legendary' || badge.rarity === 'Legendarna' ? '#7C3AED' : 
-                       badge.rarity === 'Epic' || badge.rarity === 'Epicka' ? '#DB2777' : '#64748B'
+                color: badge.rarity === 'Legendary' ? '#7C3AED' :
+                       badge.rarity === 'Epic' ? '#DB2777' : '#64748B'
               }}>
                 {badge.rarity}
               </span>

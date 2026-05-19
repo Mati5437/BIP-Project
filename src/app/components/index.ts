@@ -7,3 +7,4 @@ export { LiveLessonRoom } from './LiveLessonRoom';
 export { AchievementsView } from './AchievementsView';
 export { MessagesView } from './MessagesView';
 export { LearningMockup } from './LearningMockup';
+export { EnergySelection } from './EnergySelection';

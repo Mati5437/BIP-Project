@@ -21,31 +21,31 @@ interface ContentData {
 }
 
 export function LearningMockup({ topic, ageGroup, onBack }: LearningMockupProps) {
-  // Dane dostosowane do grupy wiekowej
+  // Content adapted to age group
   const getContentData = (): ContentData => {
     const baseContent = {
       business: {
-        title: 'Biznes i Przedsiębiorczość',
+        title: 'Business & Entrepreneurship',
         icon: <Briefcase size={40} />,
         color: '#EFF6FF'
       },
       design: {
-        title: 'Grafika i Projektowanie',
+        title: 'Graphics & Design',
         icon: <Palette size={40} />,
         color: '#F0FDF4'
       },
       coding: {
-        title: 'Programowanie',
+        title: 'Programming',
         icon: <Code size={40} />,
         color: '#FFF7ED'
       },
       marketing: {
-        title: 'Marketing Cyfrowy',
+        title: 'Digital Marketing',
         icon: <Megaphone size={40} />,
         color: '#FAF5FF'
       },
       finance: {
-        title: 'Finanse Osobiste',
+        title: 'Personal Finance',
         icon: <TrendingUp size={40} />,
         color: '#FEFCE8'
       }
@@ -56,94 +56,94 @@ export function LearningMockup({ topic, ageGroup, onBack }: LearningMockupProps)
         business: {
           ...baseContent.business,
           lessons: [
-            { name: 'Co to jest biznes?', status: 'Completed', time: '10 min' },
-            { name: 'Mój pierwszy pomysł na firmę', status: 'In Progress', time: '15 min' },
-            { name: 'Jak sprzedawać ciasteczka', status: 'Locked', time: '12 min' }
+            { name: 'What is Business?', status: 'Completed', time: '10 min' },
+            { name: 'My First Business Idea', status: 'In Progress', time: '15 min' },
+            { name: 'How to Sell Cookies', status: 'Locked', time: '12 min' }
           ],
-          description: 'Naucz się podstaw biznesu w zabawny sposób! Odkryj jak działa sprzedaż i zarabianie pieniędzy.'
+          description: 'Learn business basics in a fun way! Discover how selling and making money works.'
         },
         design: {
           ...baseContent.design,
           lessons: [
-            { name: 'Kolory i kształty', status: 'Completed', time: '8 min' },
-            { name: 'Rysuję swoje pierwsze logo', status: 'Completed', time: '20 min' },
-            { name: 'Tworzę plakat', status: 'In Progress', time: '15 min' }
+            { name: 'Colors and Shapes', status: 'Completed', time: '8 min' },
+            { name: 'Drawing My First Logo', status: 'Completed', time: '20 min' },
+            { name: 'Creating a Poster', status: 'In Progress', time: '15 min' }
           ],
-          description: 'Zanurz się w świecie kolorów i kreatywności! Stwórz piękne rysunki i projektuj własne logo.'
+          description: 'Dive into the world of colors and creativity! Create beautiful drawings and design your own logo.'
         },
         coding: {
           ...baseContent.coding,
           lessons: [
-            { name: 'Co to jest kod?', status: 'In Progress', time: '12 min' },
-            { name: 'Moja pierwsza gra', status: 'Locked', time: '30 min' },
-            { name: 'Proste animacje', status: 'Locked', time: '20 min' }
+            { name: 'What is Code?', status: 'In Progress', time: '12 min' },
+            { name: 'My First Game', status: 'Locked', time: '30 min' },
+            { name: 'Simple Animations', status: 'Locked', time: '20 min' }
           ],
-          description: 'Poznaj podstawy programowania przez zabawę! Twórz proste gry i animacje krok po kroku.'
+          description: 'Learn programming basics through play! Create simple games and animations step by step.'
         },
         marketing: {
           ...baseContent.marketing,
           lessons: [
-            { name: 'Jak przekonać kolegów', status: 'Locked', time: '10 min' },
-            { name: 'Tworzę prostą reklamę', status: 'In Progress', time: '15 min' },
-            { name: 'Plakat na wyprzedaż', status: 'Locked', time: '18 min' }
+            { name: 'How to Convince Friends', status: 'Locked', time: '10 min' },
+            { name: 'Creating a Simple Ad', status: 'In Progress', time: '15 min' },
+            { name: 'Sale Poster', status: 'Locked', time: '18 min' }
           ],
-          description: 'Dowiedz się jak dzielić się swoimi pomysłami z innymi w kreatywny sposób!'
+          description: 'Learn how to share your ideas with others in creative ways!'
         },
         finance: {
           ...baseContent.finance,
           lessons: [
-            { name: 'Skarbonka - oszczędzanie', status: 'In Progress', time: '10 min' },
-            { name: 'Liczę moje pieniądze', status: 'Locked', time: '12 min' },
-            { name: 'Mądre wydawanie', status: 'Locked', time: '8 min' }
+            { name: 'Piggy Bank - Saving', status: 'In Progress', time: '10 min' },
+            { name: 'Counting My Money', status: 'Locked', time: '12 min' },
+            { name: 'Smart Spending', status: 'Locked', time: '8 min' }
           ],
-          description: 'Naucz się mądrze oszczędzać i liczyć pieniądze! Poznaj jak działa skarbonka i budżet.'
+          description: 'Learn to save wisely and count money! Discover how piggy banks and budgets work.'
         }
       },
       teen: {
         business: {
           ...baseContent.business,
           lessons: [
-            { name: 'Jak rozpocząć biznes', status: 'Completed', time: '20 min' },
-            { name: 'Określanie grupy docelowej', status: 'In Progress', time: '30 min' },
-            { name: 'Podstawy budżetowania', status: 'Locked', time: '25 min' }
+            { name: 'How to Start a Business', status: 'Completed', time: '20 min' },
+            { name: 'Defining Your Target Audience', status: 'In Progress', time: '30 min' },
+            { name: 'Budgeting Basics', status: 'Locked', time: '25 min' }
           ],
-          description: 'Naucz się jak przekuć swoje pomysły w prawdziwy biznes. Pokrywamy wszystko od planowania po uruchomienie.'
+          description: 'Learn how to turn your ideas into a real business. We cover everything from planning to launch.'
         },
         design: {
           ...baseContent.design,
           lessons: [
-            { name: 'Wprowadzenie do teorii kolorów', status: 'Completed', time: '15 min' },
-            { name: 'Projektowanie pierwszego logo', status: 'Completed', time: '45 min' },
-            { name: 'Podstawy interfejsów', status: 'In Progress', time: '35 min' }
+            { name: 'Introduction to Color Theory', status: 'Completed', time: '15 min' },
+            { name: 'Designing Your First Logo', status: 'Completed', time: '45 min' },
+            { name: 'Interface Basics', status: 'In Progress', time: '35 min' }
           ],
-          description: 'Opanuj sztukę komunikacji wizualnej. Naucz się tworzyć logo, strony internetowe i piękne interfejsy.'
+          description: 'Master the art of visual communication. Learn to create logos, websites, and beautiful interfaces.'
         },
         coding: {
           ...baseContent.coding,
           lessons: [
-            { name: 'Python dla początkujących', status: 'In Progress', time: '60 min' },
-            { name: 'Tworzenie prostych stron (HTML/CSS)', status: 'Locked', time: '90 min' },
-            { name: 'Logika i algorytmy', status: 'Locked', time: '50 min' }
+            { name: 'Python for Beginners', status: 'In Progress', time: '60 min' },
+            { name: 'Building Simple Sites (HTML/CSS)', status: 'Locked', time: '90 min' },
+            { name: 'Logic and Algorithms', status: 'Locked', time: '50 min' }
           ],
-          description: 'Naucz się języka przyszłości. Napisz swoje pierwsze linie kodu i zbuduj funkcjonalne aplikacje.'
+          description: 'Learn the language of the future. Write your first lines of code and build functional applications.'
         },
         marketing: {
           ...baseContent.marketing,
           lessons: [
-            { name: 'Strategia mediów społecznościowych', status: 'Locked', time: '40 min' },
-            { name: 'Siła personal brandingu', status: 'In Progress', time: '30 min' },
-            { name: 'Wprowadzenie do reklam', status: 'Locked', time: '55 min' }
+            { name: 'Social Media Strategy', status: 'Locked', time: '40 min' },
+            { name: 'The Power of Personal Branding', status: 'In Progress', time: '30 min' },
+            { name: 'Introduction to Advertising', status: 'Locked', time: '55 min' }
           ],
-          description: 'Odkryj jak dzielić się swoimi pomysłami ze światem. Poznaj branding, media społecznościowe i komunikację.'
+          description: 'Discover how to share your ideas with the world. Learn branding, social media, and communication.'
         },
         finance: {
           ...baseContent.finance,
           lessons: [
-            { name: 'Oszczędzanie vs. Inwestowanie', status: 'In Progress', time: '35 min' },
-            { name: 'Rozumienie procentu składanego', status: 'Locked', time: '25 min' },
-            { name: 'Mądre nawyki finansowe', status: 'Locked', time: '20 min' }
+            { name: 'Saving vs. Investing', status: 'In Progress', time: '35 min' },
+            { name: 'Understanding Compound Interest', status: 'Locked', time: '25 min' },
+            { name: 'Smart Financial Habits', status: 'Locked', time: '20 min' }
           ],
-          description: 'Opanuj swoje finanse. Naucz się oszczędzać, inwestować i podejmować mądre decyzje finansowe.'
+          description: 'Master your finances. Learn to save, invest, and make smart financial decisions.'
         }
       },
       advanced: {
@@ -203,26 +203,26 @@ export function LearningMockup({ topic, ageGroup, onBack }: LearningMockupProps)
 
   return (
     <div style={{ animation: 'fadeIn 0.5s ease' }}>
-      <button 
-        onClick={onBack} 
-        style={{ 
-          border: 'none', 
-          background: 'none', 
-          color: '#1D4ED8', 
-          fontWeight: 'bold', 
-          cursor: 'pointer', 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: '8px', 
+      <button
+        onClick={onBack}
+        style={{
+          border: 'none',
+          background: 'none',
+          color: '#1D4ED8',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
           marginBottom: '30px',
           fontSize: '15px'
         }}
       >
-        <ArrowLeft size={20} /> Powrót do kokpitu
+        <ArrowLeft size={20} /> Back to Dashboard
       </button>
 
       <div style={{ display: 'flex', gap: '40px' }}>
-        {/* Lewa strona: Opis tematu */}
+        {/* Left side: Topic description */}
         <div style={{ flex: 1 }}>
           <div style={{ 
             backgroundColor: current.color, 
@@ -253,47 +253,47 @@ export function LearningMockup({ topic, ageGroup, onBack }: LearningMockupProps)
             {current.description}
           </p>
           
-          <div style={{ 
-            backgroundColor: 'white', 
-            padding: '25px', 
-            borderRadius: '25px', 
-            boxShadow: '0 10px 30px rgba(0,0,0,0.05)' 
+          <div style={{
+            backgroundColor: 'white',
+            padding: '25px',
+            borderRadius: '25px',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.05)'
           }}>
-            <h4 style={{ marginBottom: '15px', color: '#1E293B' }}>Postęp w temacie</h4>
-            <div style={{ 
-              width: '100%', 
-              height: '10px', 
-              backgroundColor: '#F1F5F9', 
-              borderRadius: '10px', 
-              overflow: 'hidden' 
+            <h4 style={{ marginBottom: '15px', color: '#1E293B' }}>Topic Progress</h4>
+            <div style={{
+              width: '100%',
+              height: '10px',
+              backgroundColor: '#F1F5F9',
+              borderRadius: '10px',
+              overflow: 'hidden'
             }}>
-              <div style={{ 
-                width: '35%', 
-                height: '100%', 
-                backgroundColor: '#3B82F6', 
+              <div style={{
+                width: '35%',
+                height: '100%',
+                backgroundColor: '#3B82F6',
                 borderRadius: '10px',
                 transition: 'width 1s ease-in-out'
               }}></div>
             </div>
-            <p style={{ 
-              fontSize: '14px', 
-              marginTop: '10px', 
-              color: '#64748B' 
+            <p style={{
+              fontSize: '14px',
+              marginTop: '10px',
+              color: '#64748B'
             }}>
-              35% ukończone • 2 lekcje do zrobienia
+              35% complete • 2 lessons to do
             </p>
           </div>
         </div>
 
-        {/* Prawa strona: Lista lekcji */}
+        {/* Right side: Lesson list */}
         <div style={{ flex: 1.5 }}>
-          <h3 style={{ 
-            marginBottom: '20px', 
-            fontSize: '20px', 
+          <h3 style={{
+            marginBottom: '20px',
+            fontSize: '20px',
             fontWeight: 'bold',
             color: '#1E293B'
           }}>
-            Program nauczania
+            Curriculum
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {current.lessons.map((lesson, i) => (
@@ -342,20 +342,19 @@ export function LearningMockup({ topic, ageGroup, onBack }: LearningMockupProps)
                     </span>
                   </div>
                 </div>
-                <div style={{ 
-                  fontSize: '12px', 
-                  fontWeight: 'bold', 
-                  padding: '5px 12px', 
+                <div style={{
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  padding: '5px 12px',
                   borderRadius: '10px',
-                  backgroundColor: 
-                    lesson.status === 'Completed' ? '#DCFCE7' : 
+                  backgroundColor:
+                    lesson.status === 'Completed' ? '#DCFCE7' :
                     lesson.status === 'Locked' ? '#F1F5F9' : '#DBEAFE',
-                  color: 
-                    lesson.status === 'Completed' ? '#166534' : 
+                  color:
+                    lesson.status === 'Completed' ? '#166534' :
                     lesson.status === 'Locked' ? '#94A3B8' : '#1E40AF'
                 }}>
-                  {lesson.status === 'Completed' ? 'Ukończono' : 
-                   lesson.status === 'Locked' ? 'Zablokowano' : 'W trakcie'}
+                  {lesson.status}
                 </div>
               </div>
             ))}

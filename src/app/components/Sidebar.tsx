@@ -1,4 +1,4 @@
-import { Home, Video, Trophy, MessageSquare, Star, LogOut } from 'lucide-react';
+import { Home, Sparkles, Trophy, MessageSquare, Heart, LogOut } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: string;
@@ -13,36 +13,50 @@ interface MenuBtnProps {
   active: boolean;
   onClick: () => void;
   badge?: string;
+  color?: string;
 }
 
-function MenuBtn({ icon, label, active, onClick, badge }: MenuBtnProps) {
+function MenuBtn({ icon, label, active, onClick, badge, color = '#14B8A6' }: MenuBtnProps) {
   return (
-    <button 
-      onClick={onClick} 
-      style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '15px', 
-        padding: '12px 20px', 
-        borderRadius: '15px', 
-        border: 'none', 
-        width: '100%', 
-        cursor: 'pointer', 
-        backgroundColor: active ? '#3B82F6' : 'transparent', 
-        color: active ? 'white' : '#94A3B8', 
-        fontWeight: active ? 'bold' : '500',
-        transition: 'all 0.3s'
+    <button
+      onClick={onClick}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        padding: '14px 16px',
+        borderRadius: '16px',
+        border: 'none',
+        width: '100%',
+        cursor: 'pointer',
+        backgroundColor: active ? color : 'transparent',
+        color: active ? 'white' : '#64748B',
+        fontWeight: active ? '700' : '600',
+        fontSize: '15px',
+        transition: 'all 0.3s',
+        position: 'relative'
+      }}
+      onMouseEnter={(e) => {
+        if (!active) {
+          e.currentTarget.style.backgroundColor = '#F8FAFC';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!active) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }
       }}
     >
-      {icon} 
+      {icon}
       <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
       {badge && (
-        <span style={{ 
-          backgroundColor: '#EF4444', 
-          color: 'white', 
-          fontSize: '10px', 
-          padding: '2px 8px', 
-          borderRadius: '20px' 
+        <span style={{
+          backgroundColor: '#FF6B9D',
+          color: 'white',
+          fontSize: '11px',
+          padding: '3px 8px',
+          borderRadius: '100px',
+          fontWeight: '700'
         }}>
           {badge}
         </span>
@@ -53,105 +67,169 @@ function MenuBtn({ icon, label, active, onClick, badge }: MenuBtnProps) {
 
 export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarProps) {
   return (
-    <div style={{ 
-      width: '280px', 
-      backgroundColor: '#0A2E6E', 
-      color: 'white', 
-      padding: '30px 20px', 
-      display: 'flex', 
+    <div style={{
+      width: '280px',
+      background: 'white',
+      padding: '24px 16px',
+      display: 'flex',
       flexDirection: 'column',
-      height: '100vh'
+      height: '100vh',
+      boxShadow: '4px 0 12px rgba(0,0,0,0.04)',
+      borderRight: '1px solid #F1F5F9'
     }}>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: '12px', 
-        marginBottom: '40px', 
-        paddingLeft: '10px' 
+      {/* Logo */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        marginBottom: '32px',
+        paddingLeft: '8px'
       }}>
-        <div style={{ 
-          width: '40px', 
-          height: '40px', 
-          backgroundColor: 'white', 
-          borderRadius: '12px', 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          color: '#0A2E6E', 
-          fontWeight: 'bold' 
+        <div style={{
+          width: '48px',
+          height: '48px',
+          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
+          borderRadius: '14px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(20, 184, 166, 0.25)'
         }}>
-          C
+          <Heart size={26} color="white" fill="white" />
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 'bold', margin: 0 }}>CareQuest</h1>
+        <h1 style={{
+          fontSize: '22px',
+          fontWeight: '800',
+          margin: 0,
+          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent'
+        }}>
+          CareQuest
+        </h1>
       </div>
 
-      <div style={{ 
-        backgroundColor: 'rgba(255,255,255,0.1)', 
-        padding: '15px', 
-        borderRadius: '15px', 
-        marginBottom: '30px',
-        textAlign: 'center'
+      {/* User Card */}
+      <div style={{
+        background: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)',
+        padding: '16px',
+        borderRadius: '16px',
+        marginBottom: '24px',
+        textAlign: 'center',
+        border: '2px solid #99F6E4'
       }}>
-        <p style={{ margin: 0, fontSize: '12px', opacity: 0.7 }}>Zalogowany jako</p>
-        <p style={{ margin: '5px 0 0 0', fontWeight: 'bold', fontSize: '16px' }}>{username}</p>
+        <div style={{
+          width: '56px',
+          height: '56px',
+          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
+          borderRadius: '50%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: '0 auto 12px',
+          fontSize: '24px',
+          boxShadow: '0 4px 12px rgba(20, 184, 166, 0.25)'
+        }}>
+          👋
+        </div>
+        <p style={{
+          margin: 0,
+          fontSize: '12px',
+          color: '#64748B',
+          marginBottom: '4px'
+        }}>
+          Welcome back
+        </p>
+        <p style={{
+          margin: 0,
+          fontWeight: '800',
+          fontSize: '17px',
+          color: '#1E293B'
+        }}>
+          {username}
+        </p>
       </div>
 
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1 }}>
-        <MenuBtn 
-          active={activeTab === 'home'} 
-          onClick={() => onTabChange('home')} 
-          icon={<Home size={20}/>} 
-          label="Strona główna" 
+      {/* Navigation */}
+      <nav style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '6px',
+        flex: 1
+      }}>
+        <MenuBtn
+          active={activeTab === 'home'}
+          onClick={() => onTabChange('home')}
+          icon={<Home size={20} />}
+          label="Home"
+          color="#14B8A6"
         />
-        <MenuBtn 
-          active={activeTab === 'live_session'} 
-          onClick={() => onTabChange('live_session')} 
-          icon={<Video size={20}/>} 
-          label="Lekcje na żywo" 
+        <MenuBtn
+          active={activeTab === 'activities'}
+          onClick={() => onTabChange('activities')}
+          icon={<Sparkles size={20} />}
+          label="Activities"
+          color="#3B82F6"
         />
-        <MenuBtn 
-          active={activeTab === 'achievements'} 
-          onClick={() => onTabChange('achievements')} 
-          icon={<Trophy size={20}/>} 
-          label="Osiągnięcia" 
+        <MenuBtn
+          active={activeTab === 'achievements'}
+          onClick={() => onTabChange('achievements')}
+          icon={<Trophy size={20} />}
+          label="Achievements"
+          color="#F59E0B"
         />
-        <MenuBtn 
-          active={activeTab === 'messages'} 
-          onClick={() => onTabChange('messages')} 
-          icon={<MessageSquare size={20}/>} 
-          label="Wiadomości" 
-          badge="3" 
+        <MenuBtn
+          active={activeTab === 'messages'}
+          onClick={() => onTabChange('messages')}
+          icon={<MessageSquare size={20} />}
+          label="Messages"
+          badge="3"
+          color="#8B5CF6"
         />
       </nav>
-      
-      <div style={{ 
-        backgroundColor: 'rgba(255,255,255,0.05)', 
-        padding: '20px', 
-        borderRadius: '24px',
-        marginBottom: '20px'
+
+      {/* Care Coins Card */}
+      <div style={{
+        background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
+        padding: '20px',
+        borderRadius: '18px',
+        marginBottom: '16px',
+        border: '2px solid #FED7AA'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div style={{ 
-            backgroundColor: '#FFD700', 
-            width: '36px', 
-            height: '36px', 
-            borderRadius: '50%', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            color: '#000' 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <div style={{
+            fontSize: '32px'
           }}>
-            <Star size={18} fill="currentColor"/>
+            ⭐
           </div>
           <div>
-            <p style={{ margin: 0, fontSize: '10px', opacity: 0.6, fontWeight: 'bold' }}>
-              MONETY TROSKI
+            <p style={{
+              margin: 0,
+              fontSize: '11px',
+              color: '#92400E',
+              fontWeight: '700',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}>
+              Care Coins
             </p>
-            <p style={{ margin: 0, fontWeight: 'bold', fontSize: '18px' }}>240</p>
+            <p style={{
+              margin: 0,
+              fontWeight: '800',
+              fontSize: '22px',
+              color: '#F59E0B'
+            }}>
+              120
+            </p>
           </div>
         </div>
       </div>
 
+      {/* Logout Button */}
       <button
         onClick={onLogout}
         style={{
@@ -159,26 +237,29 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           alignItems: 'center',
           justifyContent: 'center',
           gap: '10px',
-          padding: '12px',
-          backgroundColor: 'rgba(239, 68, 68, 0.2)',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
-          borderRadius: '12px',
-          color: '#FCA5A5',
+          padding: '14px',
+          backgroundColor: '#FEF2F2',
+          border: '2px solid #FEE2E2',
+          borderRadius: '14px',
+          color: '#EF4444',
           cursor: 'pointer',
-          fontWeight: 'bold',
+          fontWeight: '700',
+          fontSize: '15px',
           transition: 'all 0.3s'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = '#EF4444';
           e.currentTarget.style.color = 'white';
+          e.currentTarget.style.borderColor = '#EF4444';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
-          e.currentTarget.style.color = '#FCA5A5';
+          e.currentTarget.style.backgroundColor = '#FEF2F2';
+          e.currentTarget.style.color = '#EF4444';
+          e.currentTarget.style.borderColor = '#FEE2E2';
         }}
       >
         <LogOut size={18} />
-        Wyloguj
+        Log Out
       </button>
     </div>
   );
