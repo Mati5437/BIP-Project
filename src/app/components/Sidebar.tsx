@@ -1,4 +1,14 @@
-import { Home, Sparkles, Trophy, MessageSquare, Heart, LogOut } from 'lucide-react';
+import type { ReactNode } from 'react';
+import {
+  Home,
+  Sparkles,
+  Trophy,
+  MessageSquare,
+  Heart,
+  LogOut,
+  ShoppingBag
+} from 'lucide-react';
+import { getMockUser } from '../mock/mockDatabase';
 
 interface SidebarProps {
   activeTab: string;
@@ -8,7 +18,7 @@ interface SidebarProps {
 }
 
 interface MenuBtnProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   active: boolean;
   onClick: () => void;
@@ -37,18 +47,15 @@ function MenuBtn({ icon, label, active, onClick, badge, color = '#14B8A6' }: Men
         position: 'relative'
       }}
       onMouseEnter={(e) => {
-        if (!active) {
-          e.currentTarget.style.backgroundColor = '#F8FAFC';
-        }
+        if (!active) e.currentTarget.style.backgroundColor = '#F8FAFC';
       }}
       onMouseLeave={(e) => {
-        if (!active) {
-          e.currentTarget.style.backgroundColor = 'transparent';
-        }
+        if (!active) e.currentTarget.style.backgroundColor = 'transparent';
       }}
     >
       {icon}
       <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
+
       {badge && (
         <span style={{
           backgroundColor: '#FF6B9D',
@@ -66,6 +73,28 @@ function MenuBtn({ icon, label, active, onClick, badge, color = '#14B8A6' }: Men
 }
 
 export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarProps) {
+  const userData = getMockUser(username, 'child');
+
+  const careCoins = userData?.careCoins ?? 240;
+  const equippedAvatar = userData?.equippedAvatar ?? 'avatar-sunny';
+  const equippedFrame = userData?.equippedFrame ?? 'none';
+
+  const avatarMap: Record<string, { emoji: string; background: string }> = {
+    'avatar-sunny': { emoji: '😊', background: '#FEF3C7' },
+    'avatar-artist': { emoji: '🎨', background: '#FCE7F3' },
+    'avatar-robot': { emoji: '🤖', background: '#EDE9FE' },
+    'avatar-space': { emoji: '🚀', background: '#DBEAFE' }
+  };
+
+  const getFrameStyle = () => {
+    if (equippedFrame === 'rainbow-frame') return '4px solid #FF6B9D';
+    if (equippedFrame === 'gold-frame') return '4px solid #F59E0B';
+    if (equippedFrame === 'heart-frame') return '4px solid #EC4899';
+    return '4px solid #99F6E4';
+  };
+
+  const avatar = avatarMap[equippedAvatar] ?? avatarMap['avatar-sunny'];
+
   return (
     <div style={{
       width: '280px',
@@ -97,6 +126,7 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
         }}>
           <Heart size={26} color="white" fill="white" />
         </div>
+
         <h1 style={{
           fontSize: '22px',
           fontWeight: '800',
@@ -113,25 +143,27 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
       <div style={{
         background: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)',
         padding: '16px',
-        borderRadius: '16px',
+        borderRadius: '18px',
         marginBottom: '24px',
         textAlign: 'center',
         border: '2px solid #99F6E4'
       }}>
         <div style={{
-          width: '56px',
-          height: '56px',
-          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
+          width: '62px',
+          height: '62px',
+          background: avatar.background,
           borderRadius: '50%',
+          border: getFrameStyle(),
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           margin: '0 auto 12px',
-          fontSize: '24px',
-          boxShadow: '0 4px 12px rgba(20, 184, 166, 0.25)'
+          fontSize: '30px',
+          boxShadow: '0 4px 12px rgba(20, 184, 166, 0.18)'
         }}>
-          👋
+          {avatar.emoji}
         </div>
+
         <p style={{
           margin: 0,
           fontSize: '12px',
@@ -140,6 +172,7 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
         }}>
           Welcome back
         </p>
+
         <p style={{
           margin: 0,
           fontWeight: '800',
@@ -164,6 +197,7 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           label="Home"
           color="#14B8A6"
         />
+
         <MenuBtn
           active={activeTab === 'activities'}
           onClick={() => onTabChange('activities')}
@@ -171,6 +205,15 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           label="Activities"
           color="#3B82F6"
         />
+
+        <MenuBtn
+          active={activeTab === 'shop'}
+          onClick={() => onTabChange('shop')}
+          icon={<ShoppingBag size={20} />}
+          label="Shop"
+          color="#14B8A6"
+        />
+
         <MenuBtn
           active={activeTab === 'achievements'}
           onClick={() => onTabChange('achievements')}
@@ -178,6 +221,7 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           label="Achievements"
           color="#F59E0B"
         />
+
         <MenuBtn
           active={activeTab === 'messages'}
           onClick={() => onTabChange('messages')}
@@ -189,23 +233,27 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
       </nav>
 
       {/* Care Coins Card */}
-      <div style={{
-        background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
-        padding: '20px',
-        borderRadius: '18px',
-        marginBottom: '16px',
-        border: '2px solid #FED7AA'
-      }}>
+      <button
+        onClick={() => onTabChange('shop')}
+        style={{
+          background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
+          padding: '20px',
+          borderRadius: '18px',
+          marginBottom: '16px',
+          border: activeTab === 'shop' ? '2px solid #F59E0B' : '2px solid #FED7AA',
+          cursor: 'pointer',
+          textAlign: 'left'
+        }}
+      >
         <div style={{
           display: 'flex',
           alignItems: 'center',
           gap: '12px'
         }}>
-          <div style={{
-            fontSize: '32px'
-          }}>
+          <div style={{ fontSize: '32px' }}>
             ⭐
           </div>
+
           <div>
             <p style={{
               margin: 0,
@@ -217,17 +265,18 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
             }}>
               Care Coins
             </p>
+
             <p style={{
               margin: 0,
               fontWeight: '800',
               fontSize: '22px',
               color: '#F59E0B'
             }}>
-              120
+              {careCoins}
             </p>
           </div>
         </div>
-      </div>
+      </button>
 
       {/* Logout Button */}
       <button
