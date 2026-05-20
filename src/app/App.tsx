@@ -8,6 +8,9 @@ import { ActivityCatalogue } from './components/ActivityCatalogue';
 import { LiveLessonRoom } from './components/LiveLessonRoom';
 import { AchievementsView } from './components/AchievementsView';
 import { MessagesView } from './components/MessagesView';
+import { ShopView } from './components/ShopView';
+import { ScheduleView } from './components/ScheduleView';
+import { SessionCompleted } from './components/SessionCompleted';
 import {
   getMockUser,
   saveMockUser,
@@ -88,6 +91,7 @@ export default function App() {
                 ? 'Host Dashboard'
                 : 'Hospital Dashboard'}
           </h2>
+
           <p style={{ color: '#64748B' }}>
             Coming soon in the next iteration!
           </p>
@@ -103,12 +107,23 @@ export default function App() {
             ageGroup={ageGroup!}
             onJoinSession={() => setActiveTab('live_session')}
             onBrowseActivities={() => setActiveTab('activities')}
+            onOpenSchedule={() => setActiveTab('schedule')}
+          />
+        );
+
+      case 'schedule':
+        return (
+          <ScheduleView
+            username={username!}
+            ageGroup={ageGroup!}
+            onJoinSession={() => setActiveTab('live_session')}
           />
         );
 
       case 'activities':
         return (
           <ActivityCatalogue
+            username={username!}
             ageGroup={ageGroup!}
             onBack={() => setActiveTab('home')}
             onSelectActivity={() => {
@@ -117,11 +132,29 @@ export default function App() {
           />
         );
 
+      case 'shop':
+        return (
+          <ShopView
+            username={username!}
+            ageGroup={ageGroup!}
+          />
+        );
+
       case 'live_session':
         return (
           <LiveLessonRoom
             onBack={() => setActiveTab('home')}
+            onEndSession={() => setActiveTab('session_completed')}
             ageGroup={ageGroup!}
+          />
+        );
+
+      case 'session_completed':
+        return (
+          <SessionCompleted
+            username={username!}
+            ageGroup={ageGroup!}
+            onBack={() => setActiveTab('home')}
           />
         );
 
@@ -138,6 +171,7 @@ export default function App() {
             ageGroup={ageGroup!}
             onJoinSession={() => setActiveTab('live_session')}
             onBrowseActivities={() => setActiveTab('activities')}
+            onOpenSchedule={() => setActiveTab('schedule')}
           />
         );
     }
