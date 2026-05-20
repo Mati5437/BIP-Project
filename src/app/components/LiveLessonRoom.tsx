@@ -68,8 +68,12 @@ function ToolButton({ icon, active, onClick }: ToolButtonProps) {
         justifyContent: 'center',
         transition: 'all 0.2s ease'
       }}
-      onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; }}
-      onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'scale(1.05)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'scale(1)';
+      }}
     >
       {icon}
     </button>
