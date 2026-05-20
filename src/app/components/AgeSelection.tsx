@@ -93,7 +93,8 @@ export function AgeSelection({ username, onAgeSelect }: AgeSelectionProps) {
               key={group.id}
               onClick={() => {
                 saveAgeGroup(username, group.id as AgeGroup);
-                onAgeSelect(group.id);
+                {/* ✨ 关键修改点：在这里加上 as 'young' | 'teen' | 'advanced' 断言 */}
+                onAgeSelect(group.id as 'young' | 'teen' | 'advanced');
               }}
               style={{
                 background: group.gradient,

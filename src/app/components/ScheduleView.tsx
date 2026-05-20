@@ -165,7 +165,7 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
             fontSize: '16px',
             position: 'relative'
           }}>
-            Check today’s live lessons, enroll in upcoming activities and manage your learning plan.
+            Check today’s live lessons, participate in upcoming activities and manage your learning plan.
           </p>
         </div>
 
@@ -283,7 +283,7 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
                 color: '#64748B',
                 fontWeight: '800'
               }}>
-                Your next enrolled session
+                Your next participating session
               </p>
 
               <p style={{
@@ -570,7 +570,8 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
                 {enrolled && status !== 'live' && (
                   <div style={enrolledBadgeStyle}>
                     <CheckCircle2 size={14} />
-                    Enrolled
+                    {/* ✨ 修改点：右上角的小卡片状态标签，把原本的 'Enrolled' 改为 'Participated' */}
+                    Participated
                   </div>
                 )}
 
@@ -673,7 +674,8 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
                       style={primaryButtonStyle}
                     >
                       <PlayCircle size={17} />
-                      Join live
+                      {/* ✨ 修改点：把原本的 'Join live' 改为 'Join' */}
+                      Join
                     </button>
                   ) : enrolled ? (
                     <button
@@ -696,7 +698,8 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
                       }}
                     >
                       <Star size={17} fill="white" />
-                      {isFull ? 'Full' : 'Enroll'}
+                      {/* ✨ 修改点：按钮文案，把原本的 'Enroll' 改为 'Participate' */}
+                      {isFull ? 'Full' : 'Participate'}
                     </button>
                   )}
                 </div>
@@ -744,70 +747,4 @@ const secondaryDangerButtonStyle: CSSProperties = {
   fontWeight: '900',
   cursor: 'pointer',
   background: '#FEF2F2',
-  color: '#EF4444',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '7px',
-  flexShrink: 0
-};
-
-const smallIconButtonStyle: CSSProperties = {
-  width: '40px',
-  height: '40px',
-  borderRadius: '12px',
-  border: 'none',
-  background: '#F8FAFC',
-  color: '#64748B',
-  cursor: 'pointer',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-};
-
-const smallTextButtonStyle: CSSProperties = {
-  height: '40px',
-  borderRadius: '12px',
-  border: 'none',
-  padding: '0 14px',
-  fontWeight: '900',
-  cursor: 'pointer'
-};
-
-const calendarBadgeStyle: CSSProperties = {
-  background: '#DBEAFE',
-  color: '#2563EB',
-  borderRadius: '999px',
-  padding: '3px 7px',
-  fontSize: '10px',
-  fontWeight: '900'
-};
-
-const liveBadgeStyle: CSSProperties = {
-  position: 'absolute',
-  top: '16px',
-  right: '16px',
-  background: '#EF4444',
-  color: 'white',
-  borderRadius: '999px',
-  padding: '6px 10px',
-  fontSize: '12px',
-  fontWeight: '900',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '6px'
-};
-
-const enrolledBadgeStyle: CSSProperties = {
-  position: 'absolute',
-  top: '16px',
-  right: '16px',
-  background: '#DCFCE7',
-  color: '#15803D',
-  borderRadius: '999px',
-  padding: '6px 10px',
-  fontSize: '12px',
-  fontWeight: '900',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '5px'
-};
+  color:
