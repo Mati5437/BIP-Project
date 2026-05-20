@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Heart, User, Shield, Video, Building2 } from 'lucide-react';
+import careQuestIcon from '../assets/carequest-logo-icon.png';
+import careQuestWordmark from '../assets/carequest-wordmark.png';
 
 interface LoginScreenProps {
   onLogin: (username: string, role: string) => void;
@@ -50,82 +52,101 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (username.trim() && selectedRole) {
       onLogin(username.trim(), selectedRole);
     }
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #EBF8FF 0%, #E0F2FE 50%, #FFF7ED 100%)',
-      fontFamily: '"Plus Jakarta Sans", sans-serif',
-      padding: '40px 20px'
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        padding: '50px 40px',
-        borderRadius: '32px',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
-        maxWidth: '900px',
-        width: '100%',
-        textAlign: 'center'
-      }}>
-        {/* Logo and Branding */}
-        <div style={{
-          width: '90px',
-          height: '90px',
-          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
-          borderRadius: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto 20px',
-          boxShadow: '0 8px 16px rgba(20, 184, 166, 0.25)'
-        }}>
-          <Heart size={48} color="white" fill="white" />
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #EBF8FF 0%, #E0F2FE 50%, #FFF7ED 100%)',
+        fontFamily: '"Plus Jakarta Sans", sans-serif',
+        padding: '40px 20px'
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: 'white',
+          padding: '46px 40px',
+          borderRadius: '32px',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.08)',
+          maxWidth: '900px',
+          width: '100%',
+          textAlign: 'center'
+        }}
+      >
+        {/* Logo */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '22px'
+          }}
+        >
+          <img
+            src={careQuestIcon}
+            alt="CareQuest icon"
+            style={{
+              width: '108px',
+              height: '108px',
+              objectFit: 'contain',
+              marginBottom: '12px'
+            }}
+          />
+
+          <img
+            src={careQuestWordmark}
+            alt="CareQuest"
+            style={{
+              width: '260px',
+              maxWidth: '100%',
+              height: 'auto',
+              objectFit: 'contain',
+              display: 'block'
+            }}
+          />
         </div>
 
-        <h1 style={{
-          fontSize: '36px',
-          fontWeight: '800',
-          background: 'linear-gradient(135deg, #14B8A6 0%, #3B82F6 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          marginBottom: '8px'
-        }}>
-          Welcome to CareQuest
-        </h1>
-
-        <p style={{
-          color: '#64748B',
-          marginBottom: '40px',
-          fontSize: '17px',
-          lineHeight: '1.6'
-        }}>
+        <p
+          style={{
+            color: '#64748B',
+            margin: '0 0 38px',
+            fontSize: '17px',
+            lineHeight: '1.6'
+          }}
+        >
           Safe learning, creativity & connection during recovery
         </p>
 
         {!selectedRole ? (
           <>
-            <h3 style={{
-              fontSize: '18px',
-              fontWeight: '600',
-              color: '#1E293B',
-              marginBottom: '24px'
-            }}>
+            <h3
+              style={{
+                fontSize: '18px',
+                fontWeight: '700',
+                color: '#1E293B',
+                marginBottom: '24px'
+              }}
+            >
               How would you like to join?
             </h3>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '16px',
-              marginBottom: '20px'
-            }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: '16px',
+                marginBottom: '20px'
+              }}
+            >
               {roles.map((role) => (
                 <div
                   key={role.id}
@@ -148,28 +169,36 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
-                  <div style={{
-                    color: role.color,
-                    marginBottom: '12px',
-                    display: 'flex',
-                    justifyContent: 'center'
-                  }}>
+                  <div
+                    style={{
+                      color: role.color,
+                      marginBottom: '12px',
+                      display: 'flex',
+                      justifyContent: 'center'
+                    }}
+                  >
                     {role.icon}
                   </div>
-                  <h4 style={{
-                    fontSize: '16px',
-                    fontWeight: '700',
-                    color: '#1E293B',
-                    marginBottom: '6px'
-                  }}>
+
+                  <h4
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: '800',
+                      color: '#1E293B',
+                      marginBottom: '6px'
+                    }}
+                  >
                     {role.name}
                   </h4>
-                  <p style={{
-                    fontSize: '13px',
-                    color: '#64748B',
-                    margin: 0,
-                    lineHeight: '1.4'
-                  }}>
+
+                  <p
+                    style={{
+                      fontSize: '13px',
+                      color: '#64748B',
+                      margin: 0,
+                      lineHeight: '1.4'
+                    }}
+                  >
                     {role.description}
                   </p>
                 </div>
@@ -178,27 +207,44 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           </>
         ) : (
           <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto' }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              marginBottom: '24px',
-              padding: '16px',
-              background: roles.find(r => r.id === selectedRole)?.gradient,
-              borderRadius: '16px'
-            }}>
-              <div style={{ color: roles.find(r => r.id === selectedRole)?.color }}>
-                {roles.find(r => r.id === selectedRole)?.icon}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginBottom: '24px',
+                padding: '16px',
+                background: roles.find((role) => role.id === selectedRole)?.gradient,
+                borderRadius: '16px'
+              }}
+            >
+              <div style={{ color: roles.find((role) => role.id === selectedRole)?.color }}>
+                {roles.find((role) => role.id === selectedRole)?.icon}
               </div>
+
               <div style={{ textAlign: 'left' }}>
-                <p style={{ margin: 0, fontSize: '14px', color: '#64748B' }}>Joining as</p>
-                <p style={{ margin: 0, fontSize: '18px', fontWeight: '700', color: '#1E293B' }}>
-                  {roles.find(r => r.id === selectedRole)?.name}
+                <p style={{ margin: 0, fontSize: '14px', color: '#64748B' }}>
+                  Joining as
+                </p>
+
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: '18px',
+                    fontWeight: '800',
+                    color: '#1E293B'
+                  }}
+                >
+                  {roles.find((role) => role.id === selectedRole)?.name}
                 </p>
               </div>
+
               <button
                 type="button"
-                onClick={() => { setSelectedRole(null); setUsername(''); }}
+                onClick={() => {
+                  setSelectedRole(null);
+                  setUsername('');
+                }}
                 style={{
                   marginLeft: 'auto',
                   background: 'white',
@@ -206,7 +252,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                   borderRadius: '8px',
                   padding: '6px 12px',
                   fontSize: '13px',
-                  fontWeight: '600',
+                  fontWeight: '700',
                   color: '#64748B',
                   cursor: 'pointer'
                 }}
@@ -215,10 +261,12 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               </button>
             </div>
 
-            <div style={{
-              position: 'relative',
-              marginBottom: '20px'
-            }}>
+            <div
+              style={{
+                position: 'relative',
+                marginBottom: '20px'
+              }}
+            >
               <User
                 style={{
                   position: 'absolute',
@@ -229,6 +277,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                 }}
                 size={20}
               />
+
               <input
                 type="text"
                 placeholder="Enter your name"
@@ -243,8 +292,12 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                   outline: 'none',
                   transition: 'border-color 0.3s'
                 }}
-                onFocus={(e) => e.target.style.borderColor = '#14B8A6'}
-                onBlur={(e) => e.target.style.borderColor = '#E2E8F0'}
+                onFocus={(e) => {
+                  e.target.style.borderColor = '#14B8A6';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = '#E2E8F0';
+                }}
               />
             </div>
 
@@ -261,10 +314,12 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
                 border: 'none',
                 borderRadius: '14px',
                 fontSize: '16px',
-                fontWeight: '700',
+                fontWeight: '800',
                 cursor: username.trim() ? 'pointer' : 'not-allowed',
                 transition: 'all 0.3s',
-                boxShadow: username.trim() ? '0 4px 12px rgba(20, 184, 166, 0.3)' : 'none'
+                boxShadow: username.trim()
+                  ? '0 4px 12px rgba(20, 184, 166, 0.3)'
+                  : 'none'
               }}
               onMouseEnter={(e) => {
                 if (username.trim()) {
@@ -274,7 +329,9 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = username.trim() ? '0 4px 12px rgba(20, 184, 166, 0.3)' : 'none';
+                e.currentTarget.style.boxShadow = username.trim()
+                  ? '0 4px 12px rgba(20, 184, 166, 0.3)'
+                  : 'none';
               }}
             >
               Continue to CareQuest
@@ -282,15 +339,17 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
           </form>
         )}
 
-        <p style={{
-          marginTop: '32px',
-          color: '#94A3B8',
-          fontSize: '14px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '6px'
-        }}>
+        <p
+          style={{
+            marginTop: '32px',
+            color: '#94A3B8',
+            fontSize: '14px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '6px'
+          }}
+        >
           <Shield size={16} />
           Safe, secure & parent-approved
         </p>
