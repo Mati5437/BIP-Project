@@ -4,11 +4,12 @@ import {
   Sparkles,
   Trophy,
   MessageSquare,
-  Heart,
   LogOut,
-  ShoppingBag, CalendarDays
+  ShoppingBag,
+  CalendarDays
 } from 'lucide-react';
 import { getMockUser } from '../mock/mockDatabase';
+import careQuestFullLogo from '../assets/carequest-logo-full.png';
 
 interface SidebarProps {
   activeTab: string;
@@ -26,7 +27,14 @@ interface MenuBtnProps {
   color?: string;
 }
 
-function MenuBtn({ icon, label, active, onClick, badge, color = '#14B8A6' }: MenuBtnProps) {
+function MenuBtn({
+  icon,
+  label,
+  active,
+  onClick,
+  badge,
+  color = '#14B8A6'
+}: MenuBtnProps) {
   return (
     <button
       onClick={onClick}
@@ -41,30 +49,41 @@ function MenuBtn({ icon, label, active, onClick, badge, color = '#14B8A6' }: Men
         cursor: 'pointer',
         backgroundColor: active ? color : 'transparent',
         color: active ? 'white' : '#64748B',
-        fontWeight: active ? '700' : '600',
+        fontWeight: active ? '800' : '700',
         fontSize: '15px',
-        transition: 'all 0.3s',
+        transition: 'all 0.25s ease',
         position: 'relative'
       }}
       onMouseEnter={(e) => {
-        if (!active) e.currentTarget.style.backgroundColor = '#F8FAFC';
+        if (!active) {
+          e.currentTarget.style.backgroundColor = '#F8FAFC';
+          e.currentTarget.style.color = '#1E293B';
+        }
       }}
       onMouseLeave={(e) => {
-        if (!active) e.currentTarget.style.backgroundColor = 'transparent';
+        if (!active) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+          e.currentTarget.style.color = '#64748B';
+        }
       }}
     >
       {icon}
-      <span style={{ flex: 1, textAlign: 'left' }}>{label}</span>
+
+      <span style={{ flex: 1, textAlign: 'left' }}>
+        {label}
+      </span>
 
       {badge && (
-        <span style={{
-          backgroundColor: '#FF6B9D',
-          color: 'white',
-          fontSize: '11px',
-          padding: '3px 8px',
-          borderRadius: '100px',
-          fontWeight: '700'
-        }}>
+        <span
+          style={{
+            backgroundColor: '#FF6B9D',
+            color: 'white',
+            fontSize: '11px',
+            padding: '3px 8px',
+            borderRadius: '100px',
+            fontWeight: '800'
+          }}
+        >
           {badge}
         </span>
       )}
@@ -72,10 +91,15 @@ function MenuBtn({ icon, label, active, onClick, badge, color = '#14B8A6' }: Men
   );
 }
 
-export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarProps) {
+export function Sidebar({
+  activeTab,
+  onTabChange,
+  username,
+  onLogout
+}: SidebarProps) {
   const userData = getMockUser(username, 'child');
 
-  const careCoins = userData?.careCoins ?? 240;
+  const stars = userData?.careCoins ?? 240;
   const equippedAvatar = userData?.equippedAvatar ?? 'avatar-sunny';
   const equippedFrame = userData?.equippedFrame ?? 'none';
 
@@ -90,106 +114,112 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
     if (equippedFrame === 'rainbow-frame') return '4px solid #FF6B9D';
     if (equippedFrame === 'gold-frame') return '4px solid #F59E0B';
     if (equippedFrame === 'heart-frame') return '4px solid #EC4899';
+
     return '4px solid #99F6E4';
   };
 
   const avatar = avatarMap[equippedAvatar] ?? avatarMap['avatar-sunny'];
 
   return (
-    <div style={{
-      width: '280px',
-      background: 'white',
-      padding: '24px 16px',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      boxShadow: '4px 0 12px rgba(0,0,0,0.04)',
-      borderRight: '1px solid #F1F5F9'
-    }}>
-      {/* Logo */}
-      <div style={{
+    <div
+      style={{
+        width: '280px',
+        background: 'white',
+        padding: '22px 16px',
         display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        marginBottom: '32px',
-        paddingLeft: '8px'
-      }}>
-        <div style={{
-          width: '48px',
-          height: '48px',
-          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
-          borderRadius: '14px',
+        flexDirection: 'column',
+        height: '100vh',
+        boxShadow: '4px 0 12px rgba(0,0,0,0.04)',
+        borderRight: '1px solid #F1F5F9',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Logo */}
+      <div
+        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 4px 12px rgba(20, 184, 166, 0.25)'
-        }}>
-          <Heart size={26} color="white" fill="white" />
-        </div>
-
-        <h1 style={{
-          fontSize: '22px',
-          fontWeight: '800',
-          margin: 0,
-          background: 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>
-          CareQuest
-        </h1>
+          marginBottom: '28px',
+          padding: '4px 0'
+        }}
+      >
+        <img
+          src={careQuestFullLogo}
+          alt="CareQuest logo"
+          style={{
+            width: '230px',
+            maxWidth: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+            display: 'block'
+          }}
+        />
       </div>
 
       {/* User Card */}
-      <div style={{
-        background: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)',
-        padding: '16px',
-        borderRadius: '18px',
-        marginBottom: '24px',
-        textAlign: 'center',
-        border: '2px solid #99F6E4'
-      }}>
-        <div style={{
-          width: '62px',
-          height: '62px',
-          background: avatar.background,
-          borderRadius: '50%',
-          border: getFrameStyle(),
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          margin: '0 auto 12px',
-          fontSize: '30px',
-          boxShadow: '0 4px 12px rgba(20, 184, 166, 0.18)'
-        }}>
+      <div
+        style={{
+          background: 'linear-gradient(135deg, #F0FDFA 0%, #CCFBF1 100%)',
+          padding: '16px',
+          borderRadius: '18px',
+          marginBottom: '22px',
+          textAlign: 'center',
+          border: '2px solid #99F6E4'
+        }}
+      >
+        <div
+          style={{
+            width: '62px',
+            height: '62px',
+            background: avatar.background,
+            borderRadius: '50%',
+            border: getFrameStyle(),
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 12px',
+            fontSize: '30px',
+            boxShadow: '0 4px 12px rgba(20, 184, 166, 0.18)'
+          }}
+        >
           {avatar.emoji}
         </div>
 
-        <p style={{
-          margin: 0,
-          fontSize: '12px',
-          color: '#64748B',
-          marginBottom: '4px'
-        }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: '12px',
+            color: '#64748B',
+            marginBottom: '4px'
+          }}
+        >
           Welcome back
         </p>
 
-        <p style={{
-          margin: 0,
-          fontWeight: '800',
-          fontSize: '17px',
-          color: '#1E293B'
-        }}>
+        <p
+          style={{
+            margin: 0,
+            fontWeight: '900',
+            fontSize: '17px',
+            color: '#1E293B'
+          }}
+        >
           {username}
         </p>
       </div>
 
       {/* Navigation */}
-      <nav style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '6px',
-        flex: 1
-      }}>
+      <nav
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px',
+          flex: 1,
+          overflowY: 'auto',
+          paddingRight: '2px'
+        }}
+      >
         <MenuBtn
           active={activeTab === 'home'}
           onClick={() => onTabChange('home')}
@@ -205,7 +235,7 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           label="Schedule"
           color="#0EA5E9"
         />
-        
+
         <MenuBtn
           active={activeTab === 'activities'}
           onClick={() => onTabChange('activities')}
@@ -240,47 +270,63 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
         />
       </nav>
 
-      {/* Care Coins Card */}
+      {/* Stars Card */}
       <button
         onClick={() => onTabChange('shop')}
         style={{
           background: 'linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%)',
           padding: '20px',
           borderRadius: '18px',
+          marginTop: '16px',
           marginBottom: '16px',
           border: activeTab === 'shop' ? '2px solid #F59E0B' : '2px solid #FED7AA',
           cursor: 'pointer',
-          textAlign: 'left'
+          textAlign: 'left',
+          transition: 'all 0.25s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 8px 18px rgba(245, 158, 11, 0.18)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = 'none';
         }}
       >
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px'
+          }}
+        >
           <div style={{ fontSize: '32px' }}>
             ⭐
           </div>
 
           <div>
-            <p style={{
-              margin: 0,
-              fontSize: '11px',
-              color: '#92400E',
-              fontWeight: '700',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
-              Care Coins
+            <p
+              style={{
+                margin: 0,
+                fontSize: '11px',
+                color: '#92400E',
+                fontWeight: '800',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}
+            >
+              Stars
             </p>
 
-            <p style={{
-              margin: 0,
-              fontWeight: '800',
-              fontSize: '22px',
-              color: '#F59E0B'
-            }}>
-              {careCoins}
+            <p
+              style={{
+                margin: 0,
+                fontWeight: '900',
+                fontSize: '22px',
+                color: '#F59E0B'
+              }}
+            >
+              {stars}
             </p>
           </div>
         </div>
@@ -300,9 +346,9 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           borderRadius: '14px',
           color: '#EF4444',
           cursor: 'pointer',
-          fontWeight: '700',
+          fontWeight: '800',
           fontSize: '15px',
-          transition: 'all 0.3s'
+          transition: 'all 0.25s ease'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.backgroundColor = '#EF4444';
