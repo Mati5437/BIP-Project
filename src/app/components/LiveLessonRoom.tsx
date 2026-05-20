@@ -178,7 +178,7 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
   const formatTime = (seconds: number) => {
     const isTimeUrgent = timeLeft < 300; // mniej niż 5 minut
     const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 120);
+    const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
     
     const hDisplay = hrs > 0 ? hrs.toString().padStart(2, '0') + ':' : '00:';
