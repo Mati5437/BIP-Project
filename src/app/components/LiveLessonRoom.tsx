@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState,useEffect, type ReactNode } from 'react';
 import {
   X,
   Mic,
@@ -65,7 +65,7 @@ function ToolButton({ icon, active, onClick }: ToolButtonProps) {
         justifyContent: 'center',
         transition: 'all 0.2s ease'
       }}
-      onMouseEnter={(e) => {
+      onMo  nter={(e) => {
         e.currentTarget.style.transform = 'scale(1.05)';
       }}
       onMouseLeave={(e) => {
@@ -154,14 +154,42 @@ function Participant({ name, active, muted }: ParticipantProps) {
 }
 
 export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoomProps) {
+  
+  
   const [message, setMessage] = useState('');
   const [groupsVisible, setGroupsVisible] = useState(false);
   const [splitAnimationKey, setSplitAnimationKey] = useState(0);
   const [activeGroupIndex, setActiveGroupIndex] = useState(0);
   const [activeTool, setActiveTool] = useState('select');
-
   const isYoung = ageGroup === 'young';
+  const [timeLeft, setTimeLeft] = useState(45 * 60);
 
+  useEffect(() => {
+    // Rozpoczyna odliczanie co sekundę
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    // Czyści interwał, gdy komponent zostanie zamknięty
+    return () => clearInterval(timer);
+  }, []);
+
+  // Funkcja formatująca sekundy na format 00:00:00
+  const formatTime = (seconds: number) => {
+    const isTimeUrgent = timeLeft < 300; // mniej niż 5 minut
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 120);
+    const secs = seconds % 60;
+    
+    const hDisplay = hrs > 0 ? hrs.toString().padStart(2, '0') + ':' : '00:';
+    const mDisplay = mins.toString().padStart(2, '0') + ':';
+    const sDisplay = secs.toString().padStart(2, '0');
+    
+    return hDisplay + mDisplay + sDisplay;
+  };
+  
+  
+  
   const sessionTitle = isYoung
     ? 'Design a Logo for a Kindness Project'
     : 'Mini Startup Challenge: Invent a Helpful Product';
@@ -370,10 +398,12 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
               gap: '7px',
               fontSize: '14px',
               fontWeight: '700',
-              flexShrink: 0
+              flexShrink: 0,
+              fontFamily: 'monospace' // monospace zapobiega "skakaniu" cyfr
             }}
           >
-            <span
+           <span
+              className="timer-pulse"
               style={{
                 width: '8px',
                 height: '8px',
@@ -381,7 +411,7 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
                 background: '#EF4444'
               }}
             />
-            00:24:36
+            {formatTime(timeLeft)}
           </span>
         </div>
 
