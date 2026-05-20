@@ -11,6 +11,7 @@ import { MessagesView } from './components/MessagesView';
 import { ShopView } from './components/ShopView';
 import { ScheduleView } from './components/ScheduleView';
 import { SessionCompleted } from './components/SessionCompleted';
+import { JoiningScreen } from './components/JoiningScreen';
 import {
   getMockUser,
   saveMockUser,
@@ -105,7 +106,7 @@ export default function App() {
           <ChildDashboard
             username={username!}
             ageGroup={ageGroup!}
-            onJoinSession={() => setActiveTab('live_session')}
+            onJoinSession={() => setActiveTab('joining')}
             onBrowseActivities={() => setActiveTab('activities')}
             onOpenSchedule={() => setActiveTab('schedule')}
           />
@@ -116,7 +117,7 @@ export default function App() {
           <ScheduleView
             username={username!}
             ageGroup={ageGroup!}
-            onJoinSession={() => setActiveTab('live_session')}
+            onJoinSession={() => setActiveTab('joining')}
           />
         );
 
@@ -127,7 +128,7 @@ export default function App() {
             ageGroup={ageGroup!}
             onBack={() => setActiveTab('home')}
             onSelectActivity={() => {
-              setActiveTab('live_session');
+              setActiveTab('joining');
             }}
           />
         );
@@ -137,6 +138,13 @@ export default function App() {
           <ShopView
             username={username!}
             ageGroup={ageGroup!}
+          />
+        );
+      
+      case 'joining':
+        return (
+          <JoiningScreen
+            onFinished={() => setActiveTab('live_session')}
           />
         );
 
@@ -169,7 +177,7 @@ export default function App() {
           <ChildDashboard
             username={username!}
             ageGroup={ageGroup!}
-            onJoinSession={() => setActiveTab('live_session')}
+            onJoinSession={() => setActiveTab('joining')}
             onBrowseActivities={() => setActiveTab('activities')}
             onOpenSchedule={() => setActiveTab('schedule')}
           />
