@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useRef, useEffect, useCallback, type ReactNode } from 'react';
 import {
   X,
   Mic,
@@ -159,6 +159,26 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
   const [splitAnimationKey, setSplitAnimationKey] = useState(0);
   const [activeGroupIndex, setActiveGroupIndex] = useState(0);
   const [activeTool, setActiveTool] = useState('select');
+
+  // Whiteboard state
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isDrawing = useRef(false);
+  const lastPos = useRef<{x: number, y: number} | null>(null);
+  const [penColor, setPenColor] = useState('#3B82F6');
+  const [penSize, setPenSize] = useState(3);
+  const [stickyNotes, setStickyNotes] = useState([
+    { id: 1, text: 'Add a rainbow!', author: 'Emma', x: 120, y: 340, bg: '#FBCFE8', color: '#831843', rotate: 2 },
+    { id: 2, text: 'Use kind words!', author: 'Liam', x: 480, y: 340, bg: '#FEF3C7', color: '#78350F', rotate: -3 },
+    { id: 3, text: 'Great idea!', author: 'You', x: 620, y: 60, bg: '#BFDBFE', color: '#1E3A8A', rotate: 3 },
+  ]);
+  const [newNoteText, setNewNoteText] = useState('');
+  const [showNoteInput, setShowNoteInput] = useState(false);
+  const [textItems, setTextItems] = useState<{id: number, text: string, x: number, y: number, color: string}[]>([]);
+  const [shapes, setShapes] = useState<{id: number, type: string, x: number, y: number, w: number, h: number, color: string}[]>([]);
+  const [drawingShape, setDrawingShape] = useState<{x: number, y: number} | null>(null);
+  const [canvasHistory, setCanvasHistory] = useState<ImageData[]>([]);
+  const [canvasFuture, setCanvasFuture] = useState<ImageData[]>([]);
+  const [selectedItem, setSelectedItem] = useState<{type: 'note' | 'text' | 'shape', id: number} | null>(null);
 
   const isYoung = ageGroup === 'young';
 
@@ -876,140 +896,382 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
                   border: '2px solid #E2E8F0',
                   backgroundColor: '#FFFFFF',
                   backgroundImage: 'radial-gradient(#CBD5E1 1px, transparent 1px)',
-                  backgroundSize: '22px 22px'
+                  backgroundSize: '22px 22px',
+                  cursor: activeTool === 'pen' ? 'crosshair' : activeTool === 'text' ? 'text' : activeTool === 'shape' ? 'crosshair' : 'default'
+                }}
+                onClick={(e) => {
+                  if (activeTool === 'text') {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const text = prompt('Enter text:');
+                    if (text) {
+                      setTextItems(prev => [...prev, { id: Date.now(), text, x, y, color: penColor }]);
+                    }
+                  }
+                  if (activeTool === 'select') {
+                    setSelectedItem(null);
+                    setShowNoteInput(false);
+                  }
+                }}
+                onMouseDown={(e) => {
+                  if (activeTool === 'pen') {
+                    isDrawing.current = true;
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    lastPos.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+                    const canvas = canvasRef.current;
+                    if (canvas) {
+                      const ctx = canvas.getContext('2d');
+                      if (ctx) {
+                        const snap = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        setCanvasHistory(prev => [...prev.slice(-19), snap]);
+                        setCanvasFuture([]);
+                      }
+                    }
+                  }
+                  if (activeTool === 'shape') {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setDrawingShape({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                  }
+                }}
+                onMouseMove={(e) => {
+                  if (activeTool === 'pen' && isDrawing.current && lastPos.current) {
+                    const canvas = canvasRef.current;
+                    if (!canvas) return;
+                    const ctx = canvas.getContext('2d');
+                    if (!ctx) return;
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    ctx.beginPath();
+                    ctx.moveTo(lastPos.current.x, lastPos.current.y);
+                    ctx.lineTo(x, y);
+                    ctx.strokeStyle = penColor;
+                    ctx.lineWidth = penSize;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    ctx.stroke();
+                    lastPos.current = { x, y };
+                  }
+                }}
+                onMouseUp={(e) => {
+                  if (activeTool === 'pen') {
+                    isDrawing.current = false;
+                    lastPos.current = null;
+                  }
+                  if (activeTool === 'shape' && drawingShape) {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    const x2 = e.clientX - rect.left;
+                    const y2 = e.clientY - rect.top;
+                    const newShape = {
+                      id: Date.now(), type: 'rect',
+                      x: Math.min(drawingShape.x, x2),
+                      y: Math.min(drawingShape.y, y2),
+                      w: Math.abs(x2 - drawingShape.x),
+                      h: Math.abs(y2 - drawingShape.y),
+                      color: penColor
+                    };
+                    setShapes(prev => [...prev, newShape]);
+                    setDrawingShape(null);
+                  }
+                }}
+                onMouseLeave={() => {
+                  isDrawing.current = false;
+                  lastPos.current = null;
                 }}
               >
-                {/* Toolbar */}
-                <div
+                {/* Canvas for freehand drawing */}
+                <canvas
+                  ref={canvasRef}
+                  width={800}
+                  height={540}
                   style={{
-                    position: 'absolute',
-                    top: '18px',
-                    left: '18px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '8px',
-                    background: 'white',
-                    borderRadius: '18px',
-                    padding: '9px',
-                    boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
-                    border: '1px solid #E2E8F0',
-                    zIndex: 2
+                    position: 'absolute', inset: 0, width: '100%', height: '100%',
+                    zIndex: 1, pointerEvents: activeTool === 'pen' ? 'auto' : 'none'
                   }}
-                >
+                />
+
+                {/* Shapes layer - selectable */}
+                {shapes.map(s => {
+                  const isSelected = selectedItem?.type === 'shape' && selectedItem.id === s.id;
+                  return (
+                    <div
+                      key={s.id}
+                      onClick={(e) => { e.stopPropagation(); setSelectedItem({ type: 'shape', id: s.id }); }}
+                      style={{
+                        position: 'absolute',
+                        left: s.x, top: s.y, width: s.w, height: s.h,
+                        border: isSelected ? '2px dashed #EF4444' : `3px solid ${s.color}`,
+                        borderRadius: '6px',
+                        zIndex: 2,
+                        cursor: 'pointer',
+                        boxSizing: 'border-box',
+                        background: 'transparent'
+                      }}
+                    >
+                      {isSelected && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setShapes(prev => prev.filter(sh => sh.id !== s.id)); setSelectedItem(null); }}
+                          style={{
+                            position: 'absolute', top: -12, right: -12,
+                            width: '22px', height: '22px', borderRadius: '50%',
+                            background: '#EF4444', color: 'white', border: 'none',
+                            cursor: 'pointer', fontSize: '13px', fontWeight: '800',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)', zIndex: 20
+                          }}
+                        >×</button>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Text items - selectable */}
+                {textItems.map(item => {
+                  const isSelected = selectedItem?.type === 'text' && selectedItem.id === item.id;
+                  return (
+                    <div
+                      key={item.id}
+                      onClick={(e) => { e.stopPropagation(); setSelectedItem({ type: 'text', id: item.id }); }}
+                      style={{
+                        position: 'absolute', left: item.x, top: item.y,
+                        fontSize: '16px', fontWeight: '700', color: item.color ?? penColor,
+                        zIndex: 3, whiteSpace: 'nowrap', cursor: 'pointer',
+                        padding: '4px 6px', borderRadius: '6px',
+                        border: isSelected ? '2px dashed #EF4444' : '2px solid transparent',
+                        background: isSelected ? 'rgba(239,68,68,0.05)' : 'transparent'
+                      }}
+                    >
+                      {item.text}
+                      {isSelected && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setTextItems(prev => prev.filter(t => t.id !== item.id)); setSelectedItem(null); }}
+                          style={{
+                            position: 'absolute', top: -10, right: -10,
+                            width: '22px', height: '22px', borderRadius: '50%',
+                            background: '#EF4444', color: 'white', border: 'none',
+                            cursor: 'pointer', fontSize: '13px', fontWeight: '800',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.2)', zIndex: 20
+                          }}
+                        >×</button>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* Toolbar */}
+                <div style={{
+                  position: 'absolute', top: '18px', left: '18px',
+                  display: 'flex', flexDirection: 'column', gap: '8px',
+                  background: 'white', borderRadius: '18px', padding: '9px',
+                  boxShadow: '0 8px 24px rgba(15, 23, 42, 0.12)',
+                  border: '1px solid #E2E8F0', zIndex: 10
+                }}>
                   {tools.map((tool) => (
                     <ToolButton
                       key={tool.id}
                       icon={tool.icon}
                       active={activeTool === tool.id}
-                      onClick={() => setActiveTool(tool.id)}
+                      onClick={() => {
+                        if (tool.id === 'undo') {
+                          const canvas = canvasRef.current;
+                          if (canvas && canvasHistory.length > 0) {
+                            const ctx = canvas.getContext('2d');
+                            if (ctx) {
+                              const current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                              setCanvasFuture(f => [...f.slice(-19), current]);
+                              const prev = canvasHistory[canvasHistory.length - 1];
+                              ctx.putImageData(prev, 0, 0);
+                              setCanvasHistory(h => h.slice(0, -1));
+                            }
+                          }
+                          return;
+                        }
+                        if (tool.id === 'redo') {
+                          const canvas = canvasRef.current;
+                          if (canvas && canvasFuture.length > 0) {
+                            const ctx = canvas.getContext('2d');
+                            if (ctx) {
+                              const current = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                              setCanvasHistory(h => [...h.slice(-19), current]);
+                              const next = canvasFuture[canvasFuture.length - 1];
+                              ctx.putImageData(next, 0, 0);
+                              setCanvasFuture(f => f.slice(0, -1));
+                            }
+                          }
+                          return;
+                        }
+                        setActiveTool(tool.id);
+                      }}
                     />
                   ))}
+
+                  {/* Color picker - always visible */}
+                  <div style={{ width: '38px', height: '38px', borderRadius: '12px', overflow: 'hidden', border: '2px solid #E2E8F0' }}>
+                    <input type="color" value={penColor} onChange={(e) => setPenColor(e.target.value)}
+                      style={{ width: '50px', height: '50px', border: 'none', cursor: 'pointer', marginLeft: '-6px', marginTop: '-6px' }} />
+                  </div>
+
+                  {/* Pen size - only show when pen is active */}
+                  {activeTool === 'pen' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'center', padding: '4px 0', borderTop: '1px solid #E2E8F0' }}>
+                      {[2, 4, 8].map(size => (
+                        <button key={size} onClick={() => setPenSize(size)}
+                          style={{
+                            width: '38px', height: '24px', borderRadius: '8px', border: 'none',
+                            background: penSize === size ? '#DBEAFE' : '#F8FAFC',
+                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            outline: penSize === size ? '2px solid #3B82F6' : 'none'
+                          }}>
+                          <div style={{ width: size * 3, height: size, borderRadius: '2px', background: penColor }} />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add sticky note button */}
+                  <button
+                    onClick={() => setShowNoteInput(v => !v)}
+                    style={{
+                      width: '38px', height: '38px', borderRadius: '12px', border: 'none',
+                      background: showNoteInput ? '#DBEAFE' : '#FEF9C3',
+                      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '18px'
+                    }}
+                    title="Add sticky note"
+                  >📝</button>
+
+                  {/* Clear all */}
+                  <button
+                    onClick={() => {
+                      const canvas = canvasRef.current;
+                      if (canvas) { const ctx = canvas.getContext('2d'); ctx?.clearRect(0, 0, canvas.width, canvas.height); }
+                      setShapes([]); setTextItems([]); setSelectedItem(null);
+                    }}
+                    style={{
+                      width: '38px', height: '38px', borderRadius: '12px', border: 'none',
+                      background: '#FEE2E2', color: '#EF4444', cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px'
+                    }}
+                    title="Clear board"
+                  >🗑</button>
                 </div>
 
-                {/* Board Content */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '80px 60px 70px'
-                  }}
-                >
-                  <div
-                    className="board-main-idea"
-                    style={{
-                      textAlign: 'center'
-                    }}
-                  >
-                    <div
+                {/* Add note popup */}
+                {showNoteInput && (
+                  <div style={{
+                    position: 'absolute', top: '18px', left: '80px',
+                    background: 'white', borderRadius: '16px', padding: '16px',
+                    boxShadow: '0 8px 24px rgba(15,23,42,0.15)', border: '1px solid #E2E8F0',
+                    zIndex: 20, display: 'flex', flexDirection: 'column', gap: '10px', width: '220px'
+                  }}>
+                    <p style={{ margin: 0, fontSize: '13px', fontWeight: '800', color: '#1E293B' }}>Add a sticky note</p>
+                    <textarea
+                      value={newNoteText}
+                      onChange={e => setNewNoteText(e.target.value)}
+                      placeholder="Type your note..."
+                      rows={3}
                       style={{
-                        fontSize: isYoung ? '88px' : '84px',
-                        marginBottom: '12px'
+                        padding: '10px', borderRadius: '10px', border: '2px solid #E2E8F0',
+                        outline: 'none', fontSize: '13px', resize: 'none', fontFamily: 'inherit'
                       }}
-                    >
+                      onFocus={e => { e.currentTarget.style.borderColor = '#14B8A6'; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = '#E2E8F0'; }}
+                    />
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      {['#FBCFE8', '#FEF9C3', '#BFDBFE', '#BBF7D0', '#DDD6FE'].map(bg => (
+                        <div key={bg} onClick={() => {
+                          if (!newNoteText.trim()) return;
+                          const colors: Record<string, string> = { '#FBCFE8': '#831843', '#FEF9C3': '#78350F', '#BFDBFE': '#1E3A8A', '#BBF7D0': '#14532D', '#DDD6FE': '#4C1D95' };
+                          setStickyNotes(prev => [...prev, {
+                            id: Date.now(), text: newNoteText, author: 'You',
+                            x: 200 + Math.random() * 300, y: 100 + Math.random() * 200,
+                            bg, color: colors[bg] ?? '#1E293B',
+                            rotate: (Math.random() - 0.5) * 8
+                          }]);
+                          setNewNoteText(''); setShowNoteInput(false);
+                        }}
+                          style={{ width: '28px', height: '28px', borderRadius: '8px', background: bg, cursor: newNoteText.trim() ? 'pointer' : 'not-allowed', border: '2px solid rgba(0,0,0,0.1)' }}
+                        />
+                      ))}
+                    </div>
+                    <p style={{ margin: 0, fontSize: '11px', color: '#94A3B8' }}>Pick a color to add</p>
+                  </div>
+                )}
+
+                {/* Board background */}
+                <div style={{
+                  position: 'absolute', inset: 0, display: 'flex',
+                  alignItems: 'center', justifyContent: 'center',
+                  padding: '80px 60px 70px', pointerEvents: 'none', zIndex: 0
+                }}>
+                  <div className="board-main-idea" style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: isYoung ? '88px' : '84px', marginBottom: '12px' }}>
                       {isYoung ? '🌈💚' : '🌍💚'}
                     </div>
-
-                    <h2
-                      style={{
-                        margin: 0,
-                        fontSize: isYoung ? '40px' : '44px',
-                        fontWeight: '900',
-                        letterSpacing: '-1px',
-                        color: '#0A2E6E'
-                      }}
-                    >
+                    <h2 style={{ margin: 0, fontSize: isYoung ? '40px' : '44px', fontWeight: '900', letterSpacing: '-1px', color: '#0A2E6E' }}>
                       {isYoung ? 'KINDNESS QUEST' : 'CARE CONNECT'}
                     </h2>
-
-                    <p
-                      style={{
-                        margin: '8px 0 0 0',
-                        fontSize: '20px',
-                        color: '#0F766E',
-                        fontWeight: '700'
-                      }}
-                    >
+                    <p style={{ margin: '8px 0 0 0', fontSize: '20px', color: '#0F766E', fontWeight: '700' }}>
                       {isYoung ? 'Small smiles, big hearts' : 'Small acts, big impact'}
                     </p>
                   </div>
                 </div>
 
-                {/* Notes */}
-                <div
-                  className="board-note"
-                  style={{
-                    left: '120px',
-                    bottom: '64px',
-                    background: '#FBCFE8',
-                    color: '#831843',
-                    transform: 'rotate(2deg)'
-                  }}
-                >
-                  <p className="note-title">
-                    {isYoung ? 'Add a rainbow!' : 'Love the colors!'}
-                  </p>
-                  <div className="note-line" />
-                  <p className="note-author">
-                    {isYoung ? 'Emma' : 'Maya'}
-                  </p>
-                </div>
-
-                <div
-                  className="board-note"
-                  style={{
-                    right: '120px',
-                    bottom: '62px',
-                    background: '#FEF3C7',
-                    color: '#78350F',
-                    transform: 'rotate(-3deg)'
-                  }}
-                >
-                  <p className="note-title">
-                    {isYoung ? 'Use kind words!' : "Let's add a slogan!"}
-                  </p>
-                  <div className="note-line" />
-                  <p className="note-author">
-                    {isYoung ? 'Liam' : 'Sam'}
-                  </p>
-                </div>
-
-                <div
-                  className="board-note"
-                  style={{
-                    right: '82px',
-                    top: '72px',
-                    background: '#BFDBFE',
-                    color: '#1E3A8A',
-                    transform: 'rotate(3deg)'
-                  }}
-                >
-                  <p className="note-title">Great idea!</p>
-                  <div className="note-line" />
-                  <p className="note-author">You</p>
-                </div>
+                {/* Sticky Notes - draggable + selectable */}
+                {stickyNotes.map(note => {
+                  const isSelected = selectedItem?.type === 'note' && selectedItem.id === note.id;
+                  return (
+                    <div
+                      key={note.id}
+                      onClick={(e) => { e.stopPropagation(); setSelectedItem({ type: 'note', id: note.id }); }}
+                      style={{
+                        position: 'absolute', left: note.x, top: note.y,
+                        width: '138px', padding: '14px', borderRadius: '10px',
+                        background: note.bg, color: note.color,
+                        boxShadow: isSelected ? `0 0 0 3px #EF4444, 0 8px 18px rgba(15,23,42,0.14)` : '0 8px 18px rgba(15,23,42,0.14)',
+                        transform: `rotate(${note.rotate}deg)`,
+                        zIndex: isSelected ? 8 : 4,
+                        cursor: 'move', userSelect: 'none'
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation();
+                        setSelectedItem({ type: 'note', id: note.id });
+                        const startX = e.clientX - note.x;
+                        const startY = e.clientY - note.y;
+                        const onMove = (ev: MouseEvent) => {
+                          setStickyNotes(prev => prev.map(n => n.id === note.id
+                            ? { ...n, x: ev.clientX - startX, y: ev.clientY - startY } : n
+                          ));
+                        };
+                        const onUp = () => {
+                          window.removeEventListener('mousemove', onMove);
+                          window.removeEventListener('mouseup', onUp);
+                        };
+                        window.addEventListener('mousemove', onMove);
+                        window.addEventListener('mouseup', onUp);
+                      }}
+                    >
+                      {isSelected && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setStickyNotes(prev => prev.filter(n => n.id !== note.id)); setSelectedItem(null); }}
+                          style={{
+                            position: 'absolute', top: -10, right: -10,
+                            width: '22px', height: '22px', borderRadius: '50%',
+                            background: '#EF4444', color: 'white', border: 'none',
+                            cursor: 'pointer', fontSize: '13px', fontWeight: '800',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.25)', zIndex: 20
+                          }}
+                        >×</button>
+                      )}
+                      <p style={{ margin: 0, fontSize: '14px', fontWeight: '800', lineHeight: 1.4 }}>{note.text}</p>
+                      <div style={{ height: '1px', background: 'currentColor', opacity: 0.25, margin: '8px 0' }} />
+                      <p style={{ margin: 0, fontSize: '12px' }}>{note.author}</p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </section>
