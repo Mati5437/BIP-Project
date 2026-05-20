@@ -5,16 +5,20 @@ export type ShopItemType = 'avatar' | 'buddy' | 'theme' | 'frame';
 export interface MockUserData {
   username: string;
   role: string;
+
   ageGroup?: AgeGroup;
   energyLevel?: EnergyLevel;
   energyPopupCompleted?: boolean;
 
   careCoins?: number;
   ownedItems?: string[];
+
   equippedAvatar?: string;
   equippedBuddy?: string;
   equippedTheme?: string;
   equippedFrame?: string;
+
+  enrolledSessionIds?: string[];
 
   createdAt: string;
   updatedAt: string;
@@ -32,6 +36,13 @@ const DEFAULT_BUDDY = 'blue-buddy';
 const DEFAULT_THEME = 'default';
 const DEFAULT_FRAME = 'none';
 
+const DEFAULT_OWNED_ITEMS = [
+  DEFAULT_AVATAR,
+  DEFAULT_BUDDY,
+  DEFAULT_THEME,
+  DEFAULT_FRAME
+];
+
 function getUserKey(username: string, role: string) {
   return `${role}:${username.trim().toLowerCase()}`;
 }
@@ -46,11 +57,12 @@ function applyUserDefaults(user: MockUserData): MockUserData {
   return {
     ...user,
     careCoins: user.careCoins ?? DEFAULT_CARE_COINS,
-    ownedItems: user.ownedItems ?? [DEFAULT_AVATAR, DEFAULT_BUDDY, DEFAULT_THEME, DEFAULT_FRAME],
+    ownedItems: user.ownedItems ?? DEFAULT_OWNED_ITEMS,
     equippedAvatar: user.equippedAvatar ?? DEFAULT_AVATAR,
     equippedBuddy: user.equippedBuddy ?? DEFAULT_BUDDY,
     equippedTheme: user.equippedTheme ?? DEFAULT_THEME,
-    equippedFrame: user.equippedFrame ?? DEFAULT_FRAME
+    equippedFrame: user.equippedFrame ?? DEFAULT_FRAME,
+    enrolledSessionIds: user.enrolledSessionIds ?? []
   };
 }
 
@@ -66,7 +78,13 @@ export function readMockDatabase(): MockDatabase {
   }
 
   try {
-    return JSON.parse(raw) as MockDatabase;
+    const parsed = JSON.parse(raw) as MockDatabase;
+
+    if (!parsed.users) {
+      return getEmptyDatabase();
+    }
+
+    return parsed;
   } catch {
     return getEmptyDatabase();
   }
@@ -139,7 +157,7 @@ export function buyShopItem(
   const user = getMockUser(username, 'child') ?? saveMockUser(username, 'child', {});
 
   const currentCoins = user.careCoins ?? DEFAULT_CARE_COINS;
-  const ownedItems = user.ownedItems ?? [DEFAULT_AVATAR, DEFAULT_BUDDY, DEFAULT_THEME, DEFAULT_FRAME];
+  const ownedItems = user.ownedItems ?? DEFAULT_OWNED_ITEMS;
 
   if (ownedItems.includes(itemId)) {
     return user;
@@ -163,13 +181,9 @@ export function equipShopItem(
   }
 ): MockUserData {
   const user = getMockUser(username, 'child') ?? saveMockUser(username, 'child', {});
-  const ownedItems = user.ownedItems ?? [DEFAULT_AVATAR, DEFAULT_BUDDY, DEFAULT_THEME, DEFAULT_FRAME];
+  const ownedItems = user.ownedItems ?? DEFAULT_OWNED_ITEMS;
 
-  const isDefaultItem =
-    item.id === DEFAULT_AVATAR ||
-    item.id === DEFAULT_BUDDY ||
-    item.id === DEFAULT_THEME ||
-    item.id === DEFAULT_FRAME;
+  const isDefaultItem = DEFAULT_OWNED_ITEMS.includes(item.id);
 
   if (!ownedItems.includes(item.id) && !isDefaultItem) {
     return user;
@@ -203,6 +217,34 @@ export function addCareCoins(username: string, amount: number): MockUserData {
   return saveMockUser(username, 'child', {
     careCoins: currentCoins + amount
   });
+}
+
+export function enrollInSession(username: string, sessionId: string): MockUserData {
+  const user = getMockUser(username, 'child') ?? saveMockUser(username, 'child', {});
+  const enrolledSessionIds = user.enrolledSessionIds ?? [];
+
+  if (enrolledSessionIds.includes(sessionId)) {
+    return user;
+  }
+
+  return saveMockUser(username, 'child', {
+    enrolledSessionIds: [...enrolledSessionIds, sessionId]
+  });
+}
+
+export function cancelSessionEnrollment(username: string, sessionId: string): MockUserData {
+  const user = getMockUser(username, 'child') ?? saveMockUser(username, 'child', {});
+  const enrolledSessionIds = user.enrolledSessionIds ?? [];
+
+  return saveMockUser(username, 'child', {
+    enrolledSessionIds: enrolledSessionIds.filter((id) => id !== sessionId)
+  });
+}
+
+export function getEnrolledSessionIds(username: string): string[] {
+  const user = getMockUser(username, 'child');
+
+  return user?.enrolledSessionIds ?? [];
 }
 
 export function clearMockDatabase() {

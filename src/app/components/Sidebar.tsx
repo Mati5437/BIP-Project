@@ -6,7 +6,7 @@ import {
   MessageSquare,
   Heart,
   LogOut,
-  ShoppingBag
+  ShoppingBag, CalendarDays
 } from 'lucide-react';
 import { getMockUser } from '../mock/mockDatabase';
 
@@ -198,6 +198,14 @@ export function Sidebar({ activeTab, onTabChange, username, onLogout }: SidebarP
           color="#14B8A6"
         />
 
+        <MenuBtn
+          active={activeTab === 'schedule'}
+          onClick={() => onTabChange('schedule')}
+          icon={<CalendarDays size={20} />}
+          label="Schedule"
+          color="#0EA5E9"
+        />
+        
         <MenuBtn
           active={activeTab === 'activities'}
           onClick={() => onTabChange('activities')}
