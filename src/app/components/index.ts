@@ -8,3 +8,8 @@ export { AchievementsView } from './AchievementsView';
 export { MessagesView } from './MessagesView';
 export { LearningMockup } from './LearningMockup';
 export { EnergySelection } from './EnergySelection';
+export { ShopView } from './ShopView';
+export { ScheduleView } from './ScheduleView';
+export { MiniScheduleCard } from './MiniScheduleCard';
+// export { ProfileView } from './ProfileView';
+//export { SettingsView } from './SettingsView';

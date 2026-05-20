@@ -8,6 +8,8 @@ import { ActivityCatalogue } from './components/ActivityCatalogue';
 import { LiveLessonRoom } from './components/LiveLessonRoom';
 import { AchievementsView } from './components/AchievementsView';
 import { MessagesView } from './components/MessagesView';
+import { ShopView } from './components/ShopView';
+import { ScheduleView } from './components/ScheduleView';
 import {
   getMockUser,
   saveMockUser,
@@ -88,6 +90,7 @@ export default function App() {
                 ? 'Host Dashboard'
                 : 'Hospital Dashboard'}
           </h2>
+
           <p style={{ color: '#64748B' }}>
             Coming soon in the next iteration!
           </p>
@@ -106,14 +109,32 @@ export default function App() {
           />
         );
 
+      case 'schedule':
+        return (
+          <ScheduleView
+            username={username!}
+            ageGroup={ageGroup!}
+            onJoinSession={() => setActiveTab('live_session')}
+          />
+        );
+
       case 'activities':
         return (
           <ActivityCatalogue
+            username={username!}
             ageGroup={ageGroup!}
             onBack={() => setActiveTab('home')}
             onSelectActivity={() => {
               setActiveTab('live_session');
             }}
+          />
+        );
+
+      case 'shop':
+        return (
+          <ShopView
+            username={username!}
+            ageGroup={ageGroup!}
           />
         );
 

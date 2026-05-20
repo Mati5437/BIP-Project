@@ -1,12 +1,14 @@
 import { Smile, Meh, Frown, Battery, BatteryMedium, BatteryLow, Sparkles, Clock, Users, Award, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { getMockUser, saveEnergyLevel, type EnergyLevel } from '../mock/mockDatabase';
+import { MiniScheduleCard } from './MiniScheduleCard';
 
 interface ChildDashboardProps {
   username: string;
   ageGroup: string;
   onJoinSession: () => void;
   onBrowseActivities: () => void;
+  onOpenSchedule: () => void;
 }
 
 export function ChildDashboard({ username, ageGroup, onJoinSession, onBrowseActivities }: ChildDashboardProps) {
