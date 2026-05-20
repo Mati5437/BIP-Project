@@ -11,5 +11,7 @@ export { EnergySelection } from './EnergySelection';
 export { ShopView } from './ShopView';
 export { ScheduleView } from './ScheduleView';
 export { MiniScheduleCard } from './MiniScheduleCard';
+export { DailyScheduleCalendar } from './DailyScheduleCalendar';
+export { SessionCompleted } from './SessionCompleted';
 // export { ProfileView } from './ProfileView';
 //export { SettingsView } from './SettingsView';

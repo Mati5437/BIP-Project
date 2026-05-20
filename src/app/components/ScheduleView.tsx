@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from 'react';
+import { DailyScheduleCalendar } from './DailyScheduleCalendar';
 import {
   CalendarDays,
   Clock,

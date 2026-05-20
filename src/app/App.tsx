@@ -10,6 +10,7 @@ import { AchievementsView } from './components/AchievementsView';
 import { MessagesView } from './components/MessagesView';
 import { ShopView } from './components/ShopView';
 import { ScheduleView } from './components/ScheduleView';
+import { SessionCompleted } from './components/SessionCompleted';
 import {
   getMockUser,
   saveMockUser,
@@ -106,6 +107,7 @@ export default function App() {
             ageGroup={ageGroup!}
             onJoinSession={() => setActiveTab('live_session')}
             onBrowseActivities={() => setActiveTab('activities')}
+            onOpenSchedule={() => setActiveTab('schedule')}
           />
         );
 
@@ -142,7 +144,17 @@ export default function App() {
         return (
           <LiveLessonRoom
             onBack={() => setActiveTab('home')}
+            onEndSession={() => setActiveTab('session_completed')}
             ageGroup={ageGroup!}
+          />
+        );
+
+      case 'session_completed':
+        return (
+          <SessionCompleted
+            username={username!}
+            ageGroup={ageGroup!}
+            onBack={() => setActiveTab('home')}
           />
         );
 
@@ -159,6 +171,7 @@ export default function App() {
             ageGroup={ageGroup!}
             onJoinSession={() => setActiveTab('live_session')}
             onBrowseActivities={() => setActiveTab('activities')}
+            onOpenSchedule={() => setActiveTab('schedule')}
           />
         );
     }
