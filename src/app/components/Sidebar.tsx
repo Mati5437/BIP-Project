@@ -140,19 +140,22 @@ export function Sidebar({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          marginBottom: '28px',
-          padding: '4px 0'
+          height: '86px',
+          marginBottom: '1px',
+          padding: 0,
+          overflow: 'hidden'
         }}
       >
         <img
           src={careQuestFullLogo}
           alt="CareQuest logo"
           style={{
-            width: '230px',
+            width: '235px',
             maxWidth: '100%',
             height: 'auto',
             objectFit: 'contain',
-            display: 'block'
+            display: 'block',
+            transform: 'translateY(-6px)'
           }}
         />
       </div>
