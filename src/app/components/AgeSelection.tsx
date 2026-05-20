@@ -3,7 +3,7 @@ import { saveAgeGroup, type AgeGroup } from '../mock/mockDatabase';
 
 interface AgeSelectionProps {
   username: string;
-  onAgeSelect: (ageGroup: string) => void;
+  onAgeSelect: (ageGroup: 'young' | 'teen' | 'advanced') => void;
 }
 
 export function AgeSelection({ username, onAgeSelect }: AgeSelectionProps) {
