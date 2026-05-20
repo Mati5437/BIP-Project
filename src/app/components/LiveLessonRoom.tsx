@@ -392,30 +392,6 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
             LIVE
           </span>
 
-<<<<<<< Updated upstream
-          <span
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '7px',
-              fontSize: '14px',
-              fontWeight: '700',
-              flexShrink: 0,
-              fontFamily: 'monospace' // monospace zapobiega "skakaniu" cyfr
-            }}
-          >
-           <span
-              className="timer-pulse"
-              style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                background: '#EF4444'
-              }}
-            />
-            {formatTime(timeLeft)}
-          </span>
-=======
           <span style={{ display: 'flex', alignItems: 'center', gap: '7px', fontSize: '14px', fontWeight: '700', flexShrink: 0, fontFamily: 'monospace',color: timeLeft < 300 ? '#EF4444':'white' }}>
             <span 
               className="timer-pulse"
@@ -427,8 +403,7 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
                   }} 
                 />
              {formatTime(timeLeft)} 
-</span>
->>>>>>> Stashed changes
+            </span>
         </div>
 
         <button
@@ -1324,30 +1299,17 @@ export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoom
             border-radius: 999px;
           }
 
-<<<<<<< Updated upstream
-          .live-session-scroll::-webkit-scrollbar-thumb,
-          .live-session-scroll *::-webkit-scrollbar-thumb {
-            background: #94A3B8;
-            border-radius: 999px;
-          }
-
-          .live-session-scroll::-webkit-scrollbar-thumb:hover,
-          .live-session-scroll *::-webkit-scrollbar-thumb:hover {
-            background: #64748B;
-          }
-=======
-        .controls-card { min-height: 74px; background: white; border-radius: 22px; border: 1px solid #E2E8F0; box-shadow: 0 6px 20px rgba(15,23,42,0.06); display: flex; align-items: center; gap: 16px; padding: 0 22px; }
-        .timer-pulse { animation: timerDotPulse 1.5s ease-in-out infinite;}
-        @keyframes timerDotPulse {0%, 100% { opacity: 1; transform: scale(1);}50% { opacity: 0.4; transform: scale(0.8); }}
-        .group-card { opacity: 0; transform: translateX(-14px) scale(0.98); animation: groupIn 0.38s ease forwards; }
-        .participant-row { animation: fadeIn 0.35s ease both; }
-        .chat-message { animation: chatIn 0.3s ease both; }
-        .board-main-idea { animation: boardPop 0.6s ease both; }
-        .soft-float { animation: softFloat 3s ease-in-out infinite; }
-        .live-badge { animation: livePulse 1.6s ease-in-out infinite; }
-        .reaction-button { transition: transform 0.18s ease; }
-        .reaction-button:hover { transform: translateY(-3px) scale(1.1); }
->>>>>>> Stashed changes
+          .controls-card { min-height: 74px; background: white; border-radius: 22px; border: 1px solid #E2E8F0; box-shadow: 0 6px 20px rgba(15,23,42,0.06); display: flex; align-items: center; gap: 16px; padding: 0 22px; }
+          .timer-pulse { animation: timerDotPulse 1.5s ease-in-out infinite;}
+          @keyframes timerDotPulse {0%, 100% { opacity: 1; transform: scale(1);}50% { opacity: 0.4; transform: scale(0.8); }}
+          .group-card { opacity: 0; transform: translateX(-14px) scale(0.98); animation: groupIn 0.38s ease forwards; }
+          .participant-row { animation: fadeIn 0.35s ease both; }
+          .chat-message { animation: chatIn 0.3s ease both; }
+          .board-main-idea { animation: boardPop 0.6s ease both; }
+          .soft-float { animation: softFloat 3s ease-in-out infinite; }
+          .live-badge { animation: livePulse 1.6s ease-in-out infinite; }
+          .reaction-button { transition: transform 0.18s ease; }
+          .reaction-button:hover { transform: translateY(-3px) scale(1.1); }
 
           .live-card {
             background: white;
