@@ -25,6 +25,7 @@ import {
 
 interface LiveLessonRoomProps {
   onBack: () => void;
+  onEndSession?: () => void;
   ageGroup: string;
 }
 
@@ -152,7 +153,7 @@ function Participant({ name, active, muted }: ParticipantProps) {
   );
 }
 
-export function LiveLessonRoom({ onBack, ageGroup }: LiveLessonRoomProps) {
+export function LiveLessonRoom({ onBack,onEndSession, ageGroup }: LiveLessonRoomProps) {
   const [message, setMessage] = useState('');
   const [groupsVisible, setGroupsVisible] = useState(false);
   const [splitAnimationKey, setSplitAnimationKey] = useState(0);
@@ -385,7 +386,7 @@ export function LiveLessonRoom({ onBack, ageGroup }: LiveLessonRoomProps) {
         </div>
 
         <button
-          onClick={onBack}
+          onClick={onEndSession ?? onBack}
           style={{
             background: 'white',
             color: '#EF4444',
