@@ -236,12 +236,12 @@ export function ScheduleView({ username, ageGroup, onJoinSession }: ScheduleView
                   {status === 'live' && enrolled ? (
                     <button onClick={onJoinSession} style={primaryButtonStyle}><PlayCircle size={17} />Join</button>
                   ) : status === 'live' && !enrolled ? (
-                    <button onClick={() => { handleEnroll(session); onJoinSession(); }} style={primaryButtonStyle}><PlayCircle size={17} />Join live</button>
+                    <button onClick={() => { handleEnroll(session); onJoinSession(); }} style={primaryButtonStyle}><PlayCircle size={17} />Join</button>
                   ) : enrolled ? (
                     <button onClick={() => handleCancel(session)} style={secondaryDangerButtonStyle}><XCircle size={17} />Cancel</button>
                   ) : (
                     <button onClick={() => handleEnroll(session)} disabled={isFull} style={{ ...primaryButtonStyle, background: isFull ? '#CBD5E1' : 'linear-gradient(135deg, #14B8A6 0%, #06B6D4 100%)', cursor: isFull ? 'not-allowed' : 'pointer' }}>
-                      <Star size={17} fill="white" />{isFull ? 'Full' : 'Enroll'}
+                      <Star size={17} fill="white" />{isFull ? 'Full' : 'Participate'}
                     </button>
                   )}
                 </div>
