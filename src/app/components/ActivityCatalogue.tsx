@@ -436,7 +436,8 @@ export function ActivityCatalogue({
                       style={primaryButtonStyle}
                     >
                       <PlayCircle size={17} />
-                      Join live
+                      {/* ✨ 修改点：把原本的 'Join live' 改为 'Join' */}
+                      Join
                     </button>
                   ) : enrolled ? (
                     <button
@@ -459,7 +460,8 @@ export function ActivityCatalogue({
                       }}
                     >
                       <CheckCircle2 size={17} />
-                      {isFull ? 'Full' : 'Enroll'}
+                      {/* ✨ 修改点：把原本的 'Enroll' 改为 'Participate' */}
+                      {isFull ? 'Full' : 'Participate'}
                     </button>
                   )}
                 </div>
@@ -499,6 +501,7 @@ const primaryButtonStyle: React.CSSProperties = {
   flexShrink: 0
 };
 
+// ✨ 确保加上了这个危险按钮样式的定义，修复报错
 const dangerButtonStyle: React.CSSProperties = {
   border: 'none',
   borderRadius: '14px',

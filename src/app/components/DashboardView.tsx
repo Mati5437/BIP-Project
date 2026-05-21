@@ -101,29 +101,31 @@ export function DashboardView({ username, ageGroup, onJoin, onTopic }: Dashboard
           {getLiveSessionDescription()}
         </p>
         
-        <button 
-          onClick={onJoin} 
-          style={{ 
-            backgroundColor: 'white', 
-            color: '#1D4ED8', 
-            padding: '15px 30px', 
-            borderRadius: '15px', 
-            fontWeight: 'bold', 
-            border: 'none', 
-            cursor: 'pointer', 
+        <button
+          onClick={onJoin}
+          style={{
+            background: 'white',
+            color: '#3B82F6',
+            border: 'none',
+            padding: '12px 24px',
+            borderRadius: '12px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
             fontSize: '16px',
-            transition: 'all 0.3s'
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            transition: 'all 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+            e.currentTarget.style.transform = 'scale(1.05)';
+            e.currentTarget.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.transform = 'scale(1)';
             e.currentTarget.style.boxShadow = 'none';
           }}
         >
-          Join Online Lesson Now
+          {/* ✨ 核心修改点：把原本的 'Join Online Lesson Now' 改为 'Join' */}
+          Join
         </button>
         
         <div style={{ 
