@@ -9,7 +9,6 @@ import {
   CalendarDays
 } from 'lucide-react';
 import { getMockUser } from '../mock/mockDatabase';
-import { getAvatarVisual, getFrameVisual } from '../mock/shopItems';
 import careQuestFullLogo from '../assets/carequest-logo-full.png';
 
 interface SidebarProps {
@@ -47,12 +46,12 @@ const theme = {
   muted: '#64748B',
   border: '#DDEAF5',
   sidebarGlass:
-    'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(247,252,255,0.9) 100%)',
+    'linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(247,252,255,0.88) 100%)',
   softCareQuest:
     'linear-gradient(135deg, rgba(238,247,255,0.96) 0%, rgba(233,252,255,0.92) 52%, rgba(236,255,248,0.9) 100%)'
 };
 
-const sidebarScrollbarStyles = `
+const sidebarAnimationStyles = `
   [data-carequest-sidebar-nav] {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -61,13 +60,71 @@ const sidebarScrollbarStyles = `
   [data-carequest-sidebar-nav]::-webkit-scrollbar {
     display: none;
   }
+
+  @keyframes sidebarLiquidOne {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      border-radius: 48% 52% 61% 39% / 45% 58% 42% 55%;
+      opacity: 0.72;
+    }
+
+    50% {
+      transform: translate3d(22px, 20px, 0) scale(1.08) rotate(8deg);
+      border-radius: 59% 41% 45% 55% / 58% 41% 59% 42%;
+      opacity: 0.95;
+    }
+  }
+
+  @keyframes sidebarLiquidTwo {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+      border-radius: 58% 42% 47% 53% / 41% 57% 43% 59%;
+      opacity: 0.54;
+    }
+
+    50% {
+      transform: translate3d(-18px, -18px, 0) scale(1.1) rotate(-8deg);
+      border-radius: 40% 60% 58% 42% / 61% 39% 61% 39%;
+      opacity: 0.82;
+    }
+  }
+
+  @keyframes sidebarLiquidThree {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0.38;
+    }
+
+    50% {
+      transform: translate3d(12px, -16px, 0) scale(1.12);
+      opacity: 0.62;
+    }
+  }
+
+  @keyframes softAvatarFloat {
+    0%, 100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition: none !important;
+    }
+  }
 `;
 
 const navTones = {
   home: {
     accent: '#3B82F6',
     gradient: 'linear-gradient(135deg, #3B82F6 0%, #3BE0F6 100%)',
-    soft: 'linear-gradient(135deg, rgba(239,246,255,0.92) 0%, rgba(236,254,255,0.82) 100%)',
+    soft: 'linear-gradient(135deg, rgba(239,246,255,0.92) 0%, rgba(236,254,255,0.84) 100%)',
     iconBg: 'rgba(59, 130, 246, 0.11)',
     border: 'rgba(147, 197, 253, 0.55)',
     borderStrong: 'rgba(59, 130, 246, 0.42)',
@@ -76,7 +133,7 @@ const navTones = {
   schedule: {
     accent: '#0891B2',
     gradient: 'linear-gradient(135deg, #3BE0F6 0%, #1BF5A9 100%)',
-    soft: 'linear-gradient(135deg, rgba(236,254,255,0.92) 0%, rgba(236,255,248,0.82) 100%)',
+    soft: 'linear-gradient(135deg, rgba(236,254,255,0.92) 0%, rgba(236,255,248,0.84) 100%)',
     iconBg: 'rgba(59, 224, 246, 0.13)',
     border: 'rgba(103, 232, 249, 0.5)',
     borderStrong: 'rgba(59, 224, 246, 0.48)',
@@ -186,15 +243,44 @@ export function Sidebar({
   const equippedAvatar = userData?.equippedAvatar ?? 'avatar-sunny';
   const equippedFrame = userData?.equippedFrame ?? 'none';
 
-  const avatar = getAvatarVisual(equippedAvatar);
-  const frame = getFrameVisual(equippedFrame);
+  const avatarMap: Record<string, { emoji: string; background: string }> = {
+    'avatar-sunny': { emoji: '😊', background: '#FEF3C7' },
+    'avatar-artist': { emoji: '🎨', background: '#FCE7F3' },
+    'avatar-robot': { emoji: '🤖', background: '#EDE9FE' },
+    'avatar-space': { emoji: '🚀', background: '#DBEAFE' },
+    'avatar-gamer': { emoji: '🎮', background: '#E0F2FE' },
+    'avatar-dj': { emoji: '🎧', background: '#F5F3FF' },
+    'avatar-cat': { emoji: '🐱', background: '#ECFEFF' },
+    'avatar-detective': { emoji: '🔍', background: '#EFF6FF' },
+    'avatar-wizard': { emoji: '🔮', background: '#FAF5FF' },
+    'avatar-phoenix': { emoji: '🔥', background: '#FFF7ED' }
+  };
+
+  const getFrameStyle = () => {
+    if (equippedFrame === 'rainbow-frame' || equippedFrame === 'frame-rainbow') {
+      return '5px solid #FF6B9D';
+    }
+
+    if (equippedFrame === 'gold-frame' || equippedFrame === 'frame-gold') {
+      return '5px solid #F59E0B';
+    }
+
+    if (equippedFrame === 'heart-frame' || equippedFrame === 'frame-heart') {
+      return '5px solid #EC4899';
+    }
+
+    return '5px solid #E2E8F0';
+  };
+
+  const avatar = avatarMap[equippedAvatar] ?? avatarMap['avatar-sunny'];
 
   return (
     <aside style={sidebarStyle}>
-      <style>{sidebarScrollbarStyles}</style>
+      <style>{sidebarAnimationStyles}</style>
 
-      <div style={topGlowStyle} />
-      <div style={bottomGlowStyle} />
+      <div style={liquidOneStyle} />
+      <div style={liquidTwoStyle} />
+      <div style={liquidThreeStyle} />
 
       <div style={logoWrapperStyle}>
         <img
@@ -205,7 +291,7 @@ export function Sidebar({
       </div>
 
       <div style={userCardStyle}>
-        <div style={avatarStyle(frame.border, avatar.background)}>
+        <div style={avatarStyle(getFrameStyle(), avatar.background)}>
           {avatar.emoji}
         </div>
 
@@ -333,44 +419,61 @@ export function Sidebar({
 const sidebarStyle: CSSProperties = {
   width: '280px',
   background: theme.sidebarGlass,
-  backdropFilter: 'blur(24px)',
-  WebkitBackdropFilter: 'blur(24px)',
+  backdropFilter: 'blur(26px)',
+  WebkitBackdropFilter: 'blur(26px)',
   padding: '18px 16px',
   display: 'flex',
   flexDirection: 'column',
   height: '100vh',
-  boxShadow: '8px 0 32px rgba(16, 42, 86, 0.08)',
+  boxShadow: '8px 0 34px rgba(16, 42, 86, 0.09)',
   borderRight: '1px solid rgba(221, 234, 245, 0.78)',
   overflow: 'hidden',
   position: 'relative',
   fontFamily: '"Plus Jakarta Sans", sans-serif',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
+  isolation: 'isolate'
 };
 
-const topGlowStyle: CSSProperties = {
+const liquidOneStyle: CSSProperties = {
   position: 'absolute',
-  top: '-165px',
-  left: '-125px',
-  width: '330px',
-  height: '330px',
-  borderRadius: '999px',
+  top: '-145px',
+  left: '-140px',
+  width: '340px',
+  height: '340px',
   background:
-    'radial-gradient(circle, rgba(59, 224, 246, 0.22) 0%, rgba(59, 130, 246, 0.12) 46%, transparent 72%)',
+    'radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.28) 0%, rgba(59, 224, 246, 0.16) 46%, transparent 74%)',
+  filter: 'blur(14px)',
+  animation: 'sidebarLiquidOne 13s ease-in-out infinite',
+  pointerEvents: 'none',
+  zIndex: 0
+};
+
+const liquidTwoStyle: CSSProperties = {
+  position: 'absolute',
+  bottom: '-155px',
+  right: '-155px',
+  width: '350px',
+  height: '350px',
+  background:
+    'radial-gradient(circle at 45% 45%, rgba(27, 245, 169, 0.22) 0%, rgba(59, 224, 246, 0.13) 48%, transparent 75%)',
   filter: 'blur(16px)',
-  pointerEvents: 'none'
+  animation: 'sidebarLiquidTwo 16s ease-in-out infinite',
+  pointerEvents: 'none',
+  zIndex: 0
 };
 
-const bottomGlowStyle: CSSProperties = {
+const liquidThreeStyle: CSSProperties = {
   position: 'absolute',
-  bottom: '-170px',
-  right: '-150px',
-  width: '330px',
-  height: '330px',
-  borderRadius: '999px',
+  top: '42%',
+  left: '-90px',
+  width: '190px',
+  height: '190px',
   background:
-    'radial-gradient(circle, rgba(27, 245, 169, 0.18) 0%, rgba(245, 196, 81, 0.08) 45%, transparent 74%)',
-  filter: 'blur(18px)',
-  pointerEvents: 'none'
+    'radial-gradient(circle, rgba(139, 92, 246, 0.13) 0%, rgba(59, 130, 246, 0.08) 52%, transparent 74%)',
+  filter: 'blur(14px)',
+  animation: 'sidebarLiquidThree 11s ease-in-out infinite',
+  pointerEvents: 'none',
+  zIndex: 0
 };
 
 const logoWrapperStyle: CSSProperties = {
@@ -388,7 +491,6 @@ const logoWrapperStyle: CSSProperties = {
 
 const logoStyle: CSSProperties = {
   width: '220px',
-  marginTop: '4px',
   maxWidth: '100%',
   height: 'auto',
   objectFit: 'contain',
@@ -403,7 +505,8 @@ const userCardStyle: CSSProperties = {
   marginBottom: '18px',
   textAlign: 'center',
   border: '1px solid rgba(191, 223, 255, 0.88)',
-  boxShadow: '0 14px 28px rgba(16, 42, 86, 0.08)',
+  boxShadow:
+    '0 14px 28px rgba(16, 42, 86, 0.08), inset 0 1px 0 rgba(255,255,255,0.8)',
   position: 'relative',
   zIndex: 1,
   flexShrink: 0,
@@ -421,8 +524,10 @@ const avatarStyle = (border: string, background: string): CSSProperties => ({
   justifyContent: 'center',
   margin: '0 auto 10px',
   fontSize: '28px',
-  boxShadow: '0 10px 22px rgba(59, 130, 246, 0.16)',
-  boxSizing: 'border-box'
+  boxShadow:
+    '0 10px 22px rgba(59, 130, 246, 0.14), inset 0 1px 0 rgba(255,255,255,0.75)',
+  boxSizing: 'border-box',
+  animation: 'softAvatarFloat 4s ease-in-out infinite'
 });
 
 const welcomeTextStyle: CSSProperties = {
@@ -479,7 +584,7 @@ const menuIconStyle = (tone: NavTone, active: boolean): CSSProperties => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  background: active ? 'rgba(255,255,255,0.20)' : tone.iconBg,
+  background: active ? 'rgba(255,255,255,0.22)' : tone.iconBg,
   color: active ? 'white' : tone.accent,
   boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,0.26)' : 'none',
   transition: 'all 0.25s ease',
