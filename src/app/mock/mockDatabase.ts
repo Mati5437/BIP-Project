@@ -30,7 +30,7 @@ interface MockDatabase {
 
 const STORAGE_KEY = 'carequest_mock_database_v1';
 
-const DEFAULT_CARE_COINS = 240;
+const DEFAULT_CARE_COINS = 900;
 const DEFAULT_AVATAR = 'avatar-sunny';
 const DEFAULT_BUDDY = 'blue-buddy';
 const DEFAULT_THEME = 'default';
