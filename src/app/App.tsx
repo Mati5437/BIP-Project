@@ -39,8 +39,8 @@ export default function App() {
     setUsername(savedUser.username);
     setUserRole(savedUser.role);
 
-    if (savedUser.ageGroup) setAgeGroup(savedUser.ageGroup as AgeGroup);
-    if (savedUser.energyLevel) setEnergyLevel(savedUser.energyLevel);
+
+
     setActiveTab('home');
   };
 
