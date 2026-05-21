@@ -206,36 +206,32 @@ export function ShopView({ username, onThemeChange }: ShopViewProps) {
   };
 
   const handleItemClick = (item: ShopItem) => {
-    if (!isOwned(item)) {
-      const updatedAfterBuy = buyShopItem(username, item.id, item.price);
-      setUserData(updatedAfterBuy);
+  let updatedData;
 
+  if (!isOwned(item)) {
+    // 1. Kupowanie
+    const updatedAfterBuy = buyShopItem(username, item.id, item.price);
+    
+    // 2. Jeśli kupno się udało (lub było darmowe), od razu zakładamy
       if ((updatedAfterBuy.ownedItems ?? []).includes(item.id)) {
-        const updatedAfterEquip = equipShopItem(username, {
+        updatedData = equipShopItem(username, {
           id: item.id,
           type: item.type
-        });
-
-        setUserData(updatedAfterEquip);
-
-        if (item.type === 'theme') {
-          onThemeChange?.();
-        }
-      }
-
-      return;
+       });
+     } else {
+        updatedData = updatedAfterBuy;
+     }
+    } else {
+     // 3. Zakładanie przedmiotu, który już mamy
+     updatedData = equipShopItem(username, {
+       id: item.id,
+       type: item.type
+     });
     }
 
-    const updatedAfterEquip = equipShopItem(username, {
-      id: item.id,
-      type: item.type
-    });
-
-    setUserData(updatedAfterEquip);
-
-    if (item.type === 'theme') {
-      onThemeChange?.();
-    }
+    setUserData(updatedData);
+    // Ten props wysyła sygnał do App.tsx, żeby odświeżył Buddy'ego
+    onThemeChange?.(); 
   };
 
   const getCategoryIcon = (type: ShopItemType | 'all') => {

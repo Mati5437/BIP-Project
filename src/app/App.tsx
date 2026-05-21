@@ -19,10 +19,18 @@ import {
 } from './mock/mockDatabase';
 
 const themeMapping: Record<string, { background: string }> = {
-  'default':       { background: 'linear-gradient(135deg, #EBF8FF 0%, #F0F9FF 100%)' },
+  'default':      { background: 'linear-gradient(135deg, #EBF8FF 0%, #F0F9FF 100%)' },
   'ocean-theme':   { background: 'linear-gradient(135deg, #E0F2FE 0%, #BAE6FD 100%)' },
   'sunset-theme':  { background: 'linear-gradient(135deg, #FFEDD5 0%, #FED7AA 100%)' },
   'nature-theme':  { background: 'linear-gradient(135deg, #EAFAF1 0%, #D5F5E3 100%)' }
+};
+
+const buddyIcons: Record<string, string> = {
+  'buddy-cat': '🐱',
+  'buddy-dog': '🐶',
+  'buddy-robot': '🤖',
+  'buddy-dragon': '🐲',
+  'default': '✨'
 };
 
 type AgeGroup = 'young' | 'teen' | 'advanced';
@@ -33,14 +41,20 @@ export default function App() {
   const [ageGroup, setAgeGroup] = useState<AgeGroup | null>(null);
   const [energyLevel, setEnergyLevel] = useState<EnergyLevel | null>(null);
   const [activeTab, setActiveTab] = useState('home');
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleRefreshData = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
+  const userData = username ? getMockUser(username, 'child') : null;
+  const currentTheme = userData?.equippedTheme ?? 'default';
+  const activeBuddy = userData?.activeBuddy ?? 'default';
 
   const handleLogin = (name: string, role: string) => {
     const savedUser = saveMockUser(name, role, {});
     setUsername(savedUser.username);
     setUserRole(savedUser.role);
-
-
-
     setActiveTab('home');
   };
 
@@ -64,92 +78,30 @@ export default function App() {
     setEnergyLevel(energy);
   };
 
-  const userData = username ? getMockUser(username, 'child') : null;
-  const currentTheme = userData?.equippedTheme ?? 'default';
-
   const renderView = () => {
     if (!username || !ageGroup || !energyLevel) return null;
 
     switch (activeTab) {
       case 'home':
-        return (
-          <ChildDashboard
-            username={username}
-            ageGroup={ageGroup}
-            onJoinSession={() => setActiveTab('joining')}
-            onBrowseActivities={() => setActiveTab('activities')}
-            onOpenSchedule={() => setActiveTab('schedule')}
-          />
-        );
-
+        return <ChildDashboard username={username} ageGroup={ageGroup} onJoinSession={() => setActiveTab('joining')} onBrowseActivities={() => setActiveTab('activities')} onOpenSchedule={() => setActiveTab('schedule')} />;
       case 'schedule':
-        return (
-          <ScheduleView
-            username={username}
-            ageGroup={ageGroup}
-            onJoinSession={() => setActiveTab('joining')}
-          />
-        );
-
+        return <ScheduleView username={username} ageGroup={ageGroup} onJoinSession={() => setActiveTab('joining')} />;
       case 'activities':
-        return (
-          <ActivityCatalogue
-            username={username}
-            ageGroup={ageGroup}
-            onBack={() => setActiveTab('home')}
-            onSelectActivity={() => setActiveTab('joining')}
-          />
-        );
-
+        return <ActivityCatalogue username={username} ageGroup={ageGroup} onBack={() => setActiveTab('home')} onSelectActivity={() => setActiveTab('joining')} />;
       case 'shop':
-        return (
-          <ShopView
-            username={username}
-            ageGroup={ageGroup}
-          />
-        );
-
+        return <ShopView username={username} ageGroup={ageGroup} onThemeChange={handleRefreshData} />;
       case 'joining':
-        return (
-          <JoiningScreen
-            onFinished={() => setActiveTab('live-room')}
-          />
-        );
-
+        return <JoiningScreen onFinished={() => setActiveTab('live-room')} />;
       case 'live-room':
-        return (
-          <LiveLessonRoom
-            ageGroup={ageGroup}
-            onBack={() => setActiveTab('home')}
-            onEndSession={() => setActiveTab('session-completed')}
-          />
-        );
-
+        return <LiveLessonRoom ageGroup={ageGroup} onBack={() => setActiveTab('home')} onEndSession={() => setActiveTab('session-completed')} />;
       case 'session-completed':
-        return (
-          <SessionCompleted
-            username={username}
-            ageGroup={ageGroup}
-            onBack={() => setActiveTab('home')}
-          />
-        );
-
+        return <SessionCompleted username={username} ageGroup={ageGroup} onBack={() => setActiveTab('home')} />;
       case 'achievements':
         return <AchievementsView ageGroup={ageGroup} />;
-
       case 'messages':
         return <MessagesView ageGroup={ageGroup} />;
-
       default:
-        return (
-          <ChildDashboard
-            username={username}
-            ageGroup={ageGroup}
-            onJoinSession={() => setActiveTab('joining')}
-            onBrowseActivities={() => setActiveTab('activities')}
-            onOpenSchedule={() => setActiveTab('schedule')}
-          />
-        );
+        return <ChildDashboard username={username} ageGroup={ageGroup} onJoinSession={() => setActiveTab('joining')} onBrowseActivities={() => setActiveTab('activities')} onOpenSchedule={() => setActiveTab('schedule')} />;
     }
   };
 
@@ -162,12 +114,7 @@ export default function App() {
   }
 
   if (userRole === 'child' && !energyLevel) {
-    return (
-      <EnergySelection
-        username={username}
-        onEnergySelect={handleEnergySelect}
-      />
-    );
+    return <EnergySelection username={username} onEnergySelect={handleEnergySelect} />;
   }
 
   const shouldHideSidebar = activeTab === 'joining' || activeTab === 'live-room';
@@ -181,17 +128,55 @@ export default function App() {
       transition: 'background 0.5s ease'
     }}>
       {userRole === 'child' && !shouldHideSidebar && (
-        <Sidebar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          username={username}
-          onLogout={handleLogout}
-        />
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} username={username} onLogout={handleLogout} />
       )}
 
       <div style={{ flex: 1, overflowY: 'auto' }}>
         {renderView()}
       </div>
+
+      {/* Komponent Buddy */}
+      {userRole === 'child' && activeTab !== 'live-room' && (
+        <div 
+          key={activeBuddy} // Zmiana klucza odświeży animację przy zmianie buddy'ego
+          className="animate-fade"
+          style={{
+            position: 'fixed',
+            bottom: '30px',
+            right: '30px',
+            width: '80px',
+            height: '80px',
+            backgroundColor: 'white',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '40px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+            border: '4px solid #14B8A6',
+            zIndex: 9999,
+            cursor: 'pointer',
+            transition: 'transform 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          {buddyIcons[activeBuddy] || buddyIcons['default']}
+          
+          <div style={{
+            position: 'absolute',
+            top: '-40px',
+            backgroundColor: '#1E293B',
+            color: 'white',
+            fontSize: '12px',
+            padding: '4px 10px',
+            borderRadius: '10px',
+            whiteSpace: 'nowrap'
+          }}>
+            Hello, I'm your Buddy! 👋
+          </div>
+        </div>
+      )}
 
       <style>
         {`
