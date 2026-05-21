@@ -26,11 +26,10 @@ const themeMapping: Record<string, { background: string }> = {
 };
 
 const buddyIcons: Record<string, string> = {
-  'buddy-cat': '🐱',
-  'buddy-dog': '🐶',
-  'buddy-robot': '🤖',
-  'buddy-dragon': '🐲',
-  'default': '✨'
+  'blue-buddy': '💙',    // Klucz musi pasować do id z shopItems
+  'star-buddy': '⭐',    // Klucz musi pasować do id z shopItems
+  'robot-buddy': '🤖',   // Klucz musi pasować do id z shopItems
+  'default': '💙'        // Domyślny startowy Buddy
 };
 
 type AgeGroup = 'young' | 'teen' | 'advanced';
@@ -49,7 +48,7 @@ export default function App() {
 
   const userData = username ? getMockUser(username, 'child') : null;
   const currentTheme = userData?.equippedTheme ?? 'default';
-  const activeBuddy = userData?.activeBuddy ?? 'default';
+  const activeBuddy = userData?.equippedBuddy ?? 'default';
 
   const handleLogin = (name: string, role: string) => {
     const savedUser = saveMockUser(name, role, {});
@@ -99,7 +98,7 @@ export default function App() {
       case 'achievements':
         return <AchievementsView ageGroup={ageGroup} />;
       case 'messages':
-        return <MessagesView ageGroup={ageGroup} />;
+        return <MessagesView ageGroup={ageGroup} username={username} />;
       default:
         return <ChildDashboard username={username} ageGroup={ageGroup} onJoinSession={() => setActiveTab('joining')} onBrowseActivities={() => setActiveTab('activities')} onOpenSchedule={() => setActiveTab('schedule')} />;
     }
@@ -135,10 +134,9 @@ export default function App() {
         {renderView()}
       </div>
 
-      {/* Komponent Buddy */}
       {userRole === 'child' && activeTab !== 'live-room' && (
         <div 
-          key={activeBuddy} // Zmiana klucza odświeży animację przy zmianie buddy'ego
+          key={activeBuddy + refreshKey} 
           className="animate-fade"
           style={{
             position: 'fixed',
@@ -158,11 +156,8 @@ export default function App() {
             cursor: 'pointer',
             transition: 'transform 0.3s ease'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
           {buddyIcons[activeBuddy] || buddyIcons['default']}
-          
           <div style={{
             position: 'absolute',
             top: '-40px',
@@ -185,7 +180,6 @@ export default function App() {
             to   { opacity: 1; transform: translateY(0); }
           }
           .animate-fade { animation: fadeIn 0.5s ease; }
-
           ::-webkit-scrollbar { width: 8px; }
           ::-webkit-scrollbar-track { background: #F1F5F9; border-radius: 10px; }
           ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
